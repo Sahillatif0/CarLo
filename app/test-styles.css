@@ -1,0 +1,13 @@
+/* Test CSS to see if ANY CSS is working */
+.manual-test {
+  background-color: orange !important;
+  color: white !important;
+  padding: 20px !important;
+  margin: 10px !important;
+  border: 3px solid red !important;
+}
+
+/* Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
