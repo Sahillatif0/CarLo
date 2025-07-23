@@ -26,7 +26,9 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.variable} ${poppins.variable} font-inter antialiased`}>
         <Navbar />
-        <main>{children}</main>
+        <main>
+          <div>{children}</div>
+        </main>
         <Footer />
       </body>
     </html>

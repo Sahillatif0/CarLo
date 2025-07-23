@@ -4,18 +4,30 @@ import Link from "next/link"
 import { useState, useEffect } from "react"
 import { Menu, X, ChevronDown, Car, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { usePathname } from "next/navigation"
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isBlueBg, setIsBlueBg] = useState(false)
+  const pathname = usePathname()
+
 
   useEffect(() => {
+    setIsBlueBg(pathname === "/" || pathname === "/about" || pathname === "/contact")
+  }, [pathname])
+
+  useEffect(() => { 
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
     }
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  const handleContactClick = () => {
+    window.location.href = "/contact"
+  }
 
   return (
     <nav
@@ -30,20 +42,22 @@ export default function Navbar() {
             <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
               <Car className="w-5 h-5 text-white" />
             </div>
-            <span className={`text-2xl font-bold text-slate-900 font-poppins ${isScrolled ? "group-hover:text-blue-600" : "text-white"}`}>
-              Car<span className="text-blue-600">Lo</span>
+            <span className={`text-2xl font-bold text-slate-900 font-poppins ${(!isScrolled && isBlueBg) ? "text-white" : ""}`}>
+              {/* <span className="text-blue-600">Ahmed</span>Se<span className="text-blue-600">Car</span>Lo */}
+              Ahmed<span className="text-blue-600">Se</span>Car<span className="text-blue-600">Lo</span>
+              {/* AhmedSe<span className="text-blue-600">CarLo</span> */}
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="/" className={`text-slate-700 hover:text-blue-600 ${!isScrolled ? "text-white" : ""} font-medium transition-colors relative group`}>
+            <Link href="/" className={`text-slate-700 hover:text-blue-600 ${(!isScrolled && isBlueBg) ? "text-white" : ""} font-medium transition-colors relative group`}>
               Home
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
             </Link>
 
             <div className="relative group">
-              <button className={`flex items-center text-slate-700 hover:text-blue-600 font-medium transition-colors ${!isScrolled ? "text-white" : ""}`}>
+              <button className={`flex items-center text-slate-700 hover:text-blue-600 font-medium transition-colors ${(!isScrolled && isBlueBg) ? "text-white" : ""}`}>
                 Cars
                 <ChevronDown className="w-4 h-4 ml-1 group-hover:rotate-180 transition-transform" />
               </button>
@@ -71,7 +85,7 @@ export default function Navbar() {
 
             <Link
               href="/about"
-              className={`text-slate-700 hover:text-blue-600 font-medium transition-colors ${!isScrolled ? "text-white" : ""}`}
+              className={`text-slate-700 hover:text-blue-600 font-medium transition-colors ${(!isScrolled && isBlueBg) ? "text-white" : ""}`}
             >
               About
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
@@ -83,7 +97,8 @@ export default function Navbar() {
             <Button
               variant="outline"
               size="sm"
-              className="border-slate-300 hover:border-blue-600 hover:text-blue-600 bg-transparent"
+              className={`border-slate-300 hover:border-blue-600 hover:text-blue-600 bg-transparent ${(!isScrolled && isBlueBg) ? "" : "text-black"}`}
+              onClick={handleContactClick}
             >
               <Phone className="w-4 h-4 mr-2" />
               Contact

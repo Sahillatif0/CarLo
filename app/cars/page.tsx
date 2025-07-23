@@ -1,27 +1,59 @@
+"use client"
+
+import { Suspense, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import FilterPanel from "@/components/filter-panel"
 import CarGrid from "@/components/car-grid"
-import { Suspense } from "react"
+import SearchHeader from "@/components/search/search-header"
+import SearchFilters from "@/components/search/search-filters"
 
-export default function CarsPage() {
+function SearchContent() {
+  const searchParams = useSearchParams()
+  const [filters, setFilters] = useState({
+    make: searchParams.get("make") || "",
+    model: searchParams.get("model") || "",
+    city: searchParams.get("city") || "",
+    yearfrom: searchParams.get("yearfrom") || "",
+    yearto: searchParams.get("yearto") || "",
+    priceRange: searchParams.get("priceRange") || [100000,20000000],
+    bodyType: searchParams.get("bodyType") || "",
+    fuelType: searchParams.get("fuelType") || "",
+    query: searchParams.get("q") || "",
+  })
+
+  const [sortBy, setSortBy] = useState("latest")
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 pt-20">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-8 animate-fade-in">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2 font-poppins">Discover Your Perfect Car</h1>
-          <p className="text-slate-600 text-lg">Browse through our curated collection of premium vehicles</p>
-        </div>
+        <SearchHeader
+          filters={filters}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          viewMode={viewMode}
+          setViewMode={setViewMode}
+        />
 
-        <div className="grid lg:grid-cols-4 gap-8">
+        <SearchFilters filters={filters} setFilters={setFilters} />
+
+        <div className="grid lg:grid-cols-4 gap-8 mt-8">
           <div className="lg:col-span-1">
-            <FilterPanel />
+            <FilterPanel filters={filters} setFilters={setFilters}/>
           </div>
           <div className="lg:col-span-3">
-            <Suspense fallback={<div>Loading cars...</div>}>
-              <CarGrid />
-            </Suspense>
+            <CarGrid viewMode={viewMode} sortBy={sortBy} filters={filters} />
           </div>
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading search results...</div>}>
+      <SearchContent />
+    </Suspense>
   )
 }

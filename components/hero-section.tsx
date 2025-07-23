@@ -3,8 +3,20 @@
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Play } from "lucide-react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 
 export default function HeroSection() {
+  const router = useRouter()
+
+  const handleExploreCars = () => {
+    router.push("/cars")
+  }
+
+  const handleWatchDemo = () => {
+    // Simulate video modal or redirect to demo
+    alert("Demo video would open here")
+  }
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
       {/* Background Animation */}
@@ -33,6 +45,7 @@ export default function HeroSection() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Button
                 size="lg"
+                onClick={handleExploreCars}
                 className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-lg px-8 py-6 group"
               >
                 Explore Cars
@@ -42,7 +55,8 @@ export default function HeroSection() {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-6 group bg-transparent"
+                onClick={handleWatchDemo}
+                className="border-white/30 text-white hover:text-white hover:bg-white/10 text-lg px-8 py-6 group bg-transparent"
               >
                 <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
                 Watch Demo
@@ -70,7 +84,7 @@ export default function HeroSection() {
           <div className="relative animate-slide-up animation-delay-400">
             <div className="relative">
               <Image
-                src="/car.png?height=500&width=600"
+                src="/white-car.png?height=500&width=600"
                 alt="Luxury Car"
                 width={600}
                 height={500}

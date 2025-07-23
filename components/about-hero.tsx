@@ -4,7 +4,7 @@ import Image from "next/image"
 
 export default function AboutHero() {
   return (
-    <section className="pt-20 pb-16 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 relative overflow-hidden">
+    <section className="pt-40 pb-16 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 relative overflow-hidden">
       {/* Background Animation */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
@@ -65,7 +65,7 @@ export default function AboutHero() {
 
           <div className="relative animate-slide-up animation-delay-400">
             <Image
-              src="/car.png?height=600&width=500"
+              src="/white-car.png?height=600&width=500"
               alt="About CarLo"
               width={500}
               height={600}

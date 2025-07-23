@@ -8,10 +8,28 @@ import { Slider } from "@/components/ui/slider"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Car, MapPin, Calendar, DollarSign, Filter, X } from "lucide-react"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
-export default function FilterPanel() {
-  const [priceRange, setPriceRange] = useState([1000000, 10000000])
+export default function FilterPanel({filters, setFilters}:{filters:any, setFilters:any}) {
   const [isExpanded, setIsExpanded] = useState(true)
+  const router = useRouter()
+
+  const updateFilter = (key: string, value: string | string[]) => {
+    setFilters((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const handleSearch = () => {
+    const params = new URLSearchParams()
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) {
+        params.append(key, value)
+      }
+    })
+
+    router.push(`/cars?${params.toString()}`)
+  }
+
 
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-slate-200/50 p-6 sticky top-24 animate-slide-up">
@@ -32,7 +50,7 @@ export default function FilterPanel() {
             <Car className="w-4 h-4 mr-2 text-blue-600" />
             Make
           </Label>
-          <Select>
+          <Select value={filters.make} onValueChange={(value) => updateFilter("make", value)}>
             <SelectTrigger className="border-slate-300 focus:border-blue-500">
               <SelectValue placeholder="Select Make" />
             </SelectTrigger>
@@ -51,7 +69,7 @@ export default function FilterPanel() {
         {/* Model */}
         <div className="space-y-3">
           <Label className="text-sm font-semibold text-slate-700">Model</Label>
-          <Select>
+          <Select value={filters.model} onValueChange={(value) => updateFilter("model", value)}>
             <SelectTrigger className="border-slate-300 focus:border-blue-500">
               <SelectValue placeholder="Select Model" />
             </SelectTrigger>
@@ -71,7 +89,7 @@ export default function FilterPanel() {
             <MapPin className="w-4 h-4 mr-2 text-blue-600" />
             City
           </Label>
-          <Select>
+          <Select value={filters.city} onValueChange={(value) => updateFilter("city", value)}>
             <SelectTrigger className="border-slate-300 focus:border-blue-500">
               <SelectValue placeholder="Select City" />
             </SelectTrigger>
@@ -93,8 +111,8 @@ export default function FilterPanel() {
           </Label>
           <div className="px-2">
             <Slider
-              value={priceRange}
-              onValueChange={setPriceRange}
+              value={filters.priceRange || [100000, 20000000]}
+              onValueChange={(value) => updateFilter("priceRange", value)}
               max={20000000}
               min={500000}
               step={100000}
@@ -103,13 +121,13 @@ export default function FilterPanel() {
           </div>
           <div className="flex items-center space-x-2 text-sm">
             <Input
-              value={`PKR ${(priceRange[0] / 100000).toFixed(0)}L`}
+              value={`PKR ${(filters.priceRange[0] / 100000).toFixed(0)}L`}
               readOnly
               className="text-center border-slate-300"
             />
             <span className="text-slate-400">-</span>
             <Input
-              value={`PKR ${(priceRange[1] / 100000).toFixed(0)}L`}
+              value={`PKR ${(filters.priceRange[1] / 100000).toFixed(0)}L`}
               readOnly
               className="text-center border-slate-300"
             />
@@ -123,7 +141,7 @@ export default function FilterPanel() {
             Year
           </Label>
           <div className="grid grid-cols-2 gap-2">
-            <Select>
+            <Select value={filters.yearfrom} onValueChange={(value) => updateFilter("yearfrom", value)}>
               <SelectTrigger className="border-slate-300 focus:border-blue-500">
                 <SelectValue placeholder="From" />
               </SelectTrigger>
@@ -134,7 +152,7 @@ export default function FilterPanel() {
                 <SelectItem value="2023">2023</SelectItem>
               </SelectContent>
             </Select>
-            <Select>
+            <Select value={filters.yearto} onValueChange={(value) => updateFilter("yearto", value)}>
               <SelectTrigger className="border-slate-300 focus:border-blue-500">
                 <SelectValue placeholder="To" />
               </SelectTrigger>
@@ -154,10 +172,22 @@ export default function FilterPanel() {
           <div className="space-y-2">
             {["Sedan", "SUV", "Hatchback", "Coupe", "Convertible"].map((type) => (
               <div key={type} className="flex items-center space-x-2">
-                <Checkbox id={type.toLowerCase()} />
-                <Label htmlFor={type.toLowerCase()} className="text-sm text-slate-600">
-                  {type}
-                </Label>
+              <Checkbox
+                id={type.toLowerCase()}
+                checked={filters.bodyType?.split(",").includes(type) || false}
+                onCheckedChange={(checked) => {
+                let selected = filters.bodyType ? filters.bodyType.split(",") : [];
+                if (checked) {
+                  if (!selected.includes(type)) selected.push(type);
+                } else {
+                  selected = selected.filter((t: string) => t !== type);
+                }
+                updateFilter("bodyType", selected.join(","));
+                }}
+              />
+              <Label htmlFor={type.toLowerCase()} className="text-sm text-slate-600">
+                {type}
+              </Label>
               </div>
             ))}
           </div>
@@ -169,10 +199,22 @@ export default function FilterPanel() {
           <div className="space-y-2">
             {["Petrol", "Diesel", "Hybrid", "Electric"].map((fuel) => (
               <div key={fuel} className="flex items-center space-x-2">
-                <Checkbox id={fuel.toLowerCase()} />
-                <Label htmlFor={fuel.toLowerCase()} className="text-sm text-slate-600">
-                  {fuel}
-                </Label>
+              <Checkbox
+                id={fuel.toLowerCase()}
+                checked={filters.fuelType?.split(",").includes(fuel) || false}
+                onCheckedChange={(checked) => {
+                let selected = filters.fuelType ? filters.fuelType.split(",") : [];
+                if (checked) {
+                  if (!selected.includes(fuel)) selected.push(fuel);
+                } else {
+                  selected = selected.filter((f: string) => f !== fuel);
+                }
+                updateFilter("fuelType", selected.join(","));
+                }}
+              />
+              <Label htmlFor={fuel.toLowerCase()} className="text-sm text-slate-600">
+                {fuel}
+              </Label>
               </div>
             ))}
           </div>
@@ -180,7 +222,7 @@ export default function FilterPanel() {
 
         {/* Action Buttons */}
         <div className="space-y-3 pt-4 border-t border-slate-200">
-          <Button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+          <Button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700" onClick={handleSearch}>
             Apply Filters
           </Button>
           <Button variant="outline" className="w-full border-slate-300 hover:bg-slate-50 bg-transparent">
