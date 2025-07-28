@@ -11,6 +11,7 @@ import { Search, Edit, Trash2, Eye, Filter, Car, Users, TrendingUp, AlertCircle,
 import CarEditModal from "./car-edit-modal"
 import DeleteConfirmModal from "./delete-confirm-modal"
 import { Car as CarType} from "@/types/types"
+import { useRouter } from "next/navigation"
 
 export default function AdminDashboard() {
   const [cars, setCars] = useState<CarType[]>([])
@@ -18,7 +19,7 @@ export default function AdminDashboard() {
   const [statusFilter, setStatusFilter] = useState("all")
   const [editingCar, setEditingCar] = useState<CarType | null>(null)
   const [deletingCar, setDeletingCar] = useState<CarType | null>(null)
-
+  const router = useRouter()
 
 
   useEffect(()=>{
@@ -52,6 +53,9 @@ export default function AdminDashboard() {
     // Call API to delete car
     fetch(`/api/car/${carId}`, {
       method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ password: process.env.NEXT_PUBLIC_ADMIN_PASSWORD }),
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to delete car")
@@ -64,7 +68,6 @@ export default function AdminDashboard() {
       .catch((error) => {
         console.error("Error deleting car:", error)
       })
-    setCars(cars.filter((car) => car.id !== carId))
     setDeletingCar(null)
   }
 
@@ -72,8 +75,9 @@ export default function AdminDashboard() {
     // Call API to update car
     fetch(`/api/car/${updatedCar.id}`, {
       method: "PUT",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({carDetails: updatedCar}),
+      body: JSON.stringify({carDetails: updatedCar, password: process.env.NEXT_PUBLIC_ADMIN_PASSWORD}),
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to update car")
@@ -175,7 +179,7 @@ export default function AdminDashboard() {
               <CardTitle>Car Listings Management</CardTitle>
               <CardDescription>Manage all car listings, edit details, and moderate content</CardDescription>
             </div>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-blue-600 hover:bg-blue-700" onClick={()=>{router.push("/add-car")}}>
               <Plus className="mr-2 h-4 w-4" />
               Add New Car
             </Button>

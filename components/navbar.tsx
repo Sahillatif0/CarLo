@@ -233,7 +233,7 @@ export default function Navbar() {
                 {/* Divider */}
                 <div className="border-t border-slate-200 my-4" />
 
-                <Link
+                {/* <Link
                   href="/add-car"
                   className="flex items-center space-x-3 py-4 px-4 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-xl transition-all group"
                   onClick={closeMobileMenu}
@@ -241,7 +241,7 @@ export default function Navbar() {
                   <Plus className="w-5 h-5 text-green-500 group-hover:text-green-700" />
                   <span className="font-medium">List Your Car</span>
                   <span className="ml-auto bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">Sell</span>
-                </Link>
+                </Link> */}
               </div>
             </div>
 

@@ -3,9 +3,9 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(req: Request) {
   const id = req.url.split("/").pop();
-  
-  
-  
+
+
+
   try {
     const currentCar = await prisma.car.findUnique({
       where: {
@@ -58,7 +58,7 @@ export async function GET(req: Request) {
 
     const sorted = scoredCars.sort((a: typeof currentCar & { score: number }, b: typeof currentCar & { score: number }) => b.score - a.score);
 
-    return Response.json({ car: currentCar, seller, relatedCars: sorted });
+    return Response.json({ car: currentCar, seller, relatedCars: sorted.slice(0, 3) });
   } catch (error) {
     return Response.json({ message: "Internal server error", error });
   }
@@ -66,6 +66,11 @@ export async function GET(req: Request) {
 
 export async function DELETE(req: Request) {
   const id = req.url.split("/").pop();
+  const {password} = await req.json();
+
+  if(!password || password!==process.env.NEXT_PUBLIC_ADMIN_PASSWORD){
+    return Response.json({message: "Unauthorized access"}, {status: 401})
+  }
   
   try {
     const car = await prisma.car.delete({
@@ -82,7 +87,12 @@ export async function DELETE(req: Request) {
 
 export async function PUT(req: Request) {
   const id = req.url.split("/").pop();
-  const { carDetails } = await req.json();
+  const { carDetails, password } = await req.json();
+
+  if(!password || password!==process.env.NEXT_PUBLIC_ADMIN_PASSWORD){
+    return Response.json({message: "Unauthorized access"}, {status: 401})
+  }
+
   console.log("Car ID:", id);
   //how to remove properties from carDetails?
   const { sellerId, status, ...updatedDetails } = carDetails;
