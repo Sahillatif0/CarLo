@@ -1,5 +1,6 @@
 
 import { prisma } from "@/lib/prisma"; 
+import { Car } from "@prisma/client";
 
 export async function GET(req: Request) {
   const id = req.url.split("/").pop();
@@ -46,7 +47,7 @@ export async function GET(req: Request) {
       take: 10,
     });
 
-    const scoredCars = relatedCars.map((car) => {
+    const scoredCars = relatedCars.map((car: Car) => {
       let score = 0;
       if (car.make === currentCar.make) score += 2;
       if (car.model === currentCar.model) score += 3;
