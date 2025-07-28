@@ -56,7 +56,7 @@ export async function GET(req: Request) {
       return { ...car, score };
     });
 
-    const sorted = scoredCars.sort((a, b) => b.score - a.score);
+    const sorted = scoredCars.sort((a: typeof currentCar & { score: number }, b: typeof currentCar & { score: number }) => b.score - a.score);
 
     return Response.json({ car: currentCar, seller, relatedCars: sorted });
   } catch (error) {
