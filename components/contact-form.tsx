@@ -143,9 +143,9 @@ export default function ContactForm() {
                   <div>
                     <h4 className="font-semibold text-slate-900 mb-1">Email</h4>
                     <p className="text-slate-600">
-                      info@CarLo.pk
+                      info@AhmedSeCarLo.pk
                       <br />
-                      support@CarLo.pk
+                      support@AhmedSeCarLo.pk
                     </p>
                   </div>
                 </div>

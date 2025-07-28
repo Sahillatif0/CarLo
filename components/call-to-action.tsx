@@ -6,12 +6,12 @@ import Link from "next/link"
 
 export default function CallToAction() {
   const handleCallNow = () => {
-    window.location.href = "tel:+923001234567"
+    window.location.href = "tel:+"+process.env.NEXT_PUBLIC_TEL
   }
 
   const handleWhatsApp = () => {
     const message = "Hi, I'm interested in your premium car collection"
-    const whatsappUrl = `https://wa.me/923001234567?text=${encodeURIComponent(message)}`
+    const whatsappUrl = `https://wa.me/${process.env.NEXT_PUBLIC_TEL}?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, "_blank")
   }
 
@@ -74,7 +74,7 @@ export default function CallToAction() {
             >
               <Phone className="w-8 h-8 text-blue-400 mx-auto mb-4" />
               <h3 className="text-white font-semibold mb-2">Call Us</h3>
-              <p className="text-slate-300 text-sm">+92 300 1234567</p>
+              <p className="text-slate-300 text-sm">+{process.env.NEXT_PUBLIC_TEL}</p>
             </div>
 
             <div

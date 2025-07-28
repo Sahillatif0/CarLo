@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+model Car {
+  id                  String   @id @default(cuid())
+  title               String
+  make                String       // e.g., Toyota
+  model               String       // e.g., Corolla
+  variant             String
+  year                Int
+  price               Int
+  originalPrice       Int
+  mileage             Int          // in kilometers
+  transmission        Transmission
+  fuelType            FuelType
+  bodyType            String
+  engineSize          String?         // optional, in cc
+  assembly            Assembly
+  color               String?
+  condition           String?
+  features            String[]
+  description         String?
+  images              String[]     // Array of image URLs
+  city                String?
+  address             String?
+  registeredCity      String?
+  badge               String
+  badgeColor          String
+  views               Int   @default(0)
+  seating             Int
+  sellerId            String
+  seller              User   @relation(fields: [sellerId], references: [id])
+  sold                Boolean   @default(false)
+  featured            Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @default(now())
+}
+
+model User {
+  id      String @id @default(cuid())
+  name    String
+  email   String @unique
+  phone   String @unique
+  address String 
+  cars    Car[]
+
+}
+
+enum Transmission {
+  Manual
+  Automatic
+  CVT
+}
+
+enum Assembly {
+  Local
+  Imported
+}
+
+enum FuelType {
+  Petrol
+  Diesel
+  CNG
+  Hybrid
+  Electric
+}
+

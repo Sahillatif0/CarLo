@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Search, MapPin, Calendar, DollarSign, Car } from "lucide-react"
+import { Input } from "./ui/input"
 
 export default function SearchSection() {
   const router = useRouter()
@@ -13,7 +14,7 @@ export default function SearchSection() {
     model: "",
     city: "",
     year: "",
-    priceRange: "",
+    priceRange: [],
   })
 
   const handleSearch = () => {
@@ -21,7 +22,17 @@ export default function SearchSection() {
 
     Object.entries(searchFilters).forEach(([key, value]) => {
       if (value) {
-        params.append(key, value)
+        if(key==="priceRange"){
+          value = value.split("-")
+          params.append("minPrice", value[0])
+          params.append("maxPrice", value[1])
+        }
+        else if (typeof value === "string"){
+          value = value.trim() // Ensure no leading/trailing spaces 
+          params.append(key, value)
+        }
+        else
+          params.append(key, value)
       }
     })
 
@@ -47,18 +58,12 @@ export default function SearchSection() {
                 <Car className="w-4 h-4 mr-2 text-blue-600" />
                 Make
               </label>
-              <Select onValueChange={(value) => updateFilter("make", value)}>
-                <SelectTrigger className="h-12 border-slate-300 focus:border-blue-500">
-                  <SelectValue placeholder="Select Make" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="toyota">Toyota</SelectItem>
-                  <SelectItem value="honda">Honda</SelectItem>
-                  <SelectItem value="bmw">BMW</SelectItem>
-                  <SelectItem value="mercedes">Mercedes-Benz</SelectItem>
-                  <SelectItem value="audi">Audi</SelectItem>
-                </SelectContent>
-              </Select>
+              <Input
+                type="text"
+                placeholder="Enter Make"
+                value={searchFilters.make}
+                onChange={(e) => updateFilter("make", e.target.value)}
+              />
             </div>
 
             <div className="space-y-2">
@@ -66,17 +71,12 @@ export default function SearchSection() {
                 <Car className="w-4 h-4 mr-2 text-blue-600" />
                 Model
               </label>
-              <Select onValueChange={(value) => updateFilter("model", value)}>
-                <SelectTrigger className="h-12 border-slate-300 focus:border-blue-500">
-                  <SelectValue placeholder="Select Model" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="corolla">Corolla</SelectItem>
-                  <SelectItem value="civic">Civic</SelectItem>
-                  <SelectItem value="camry">Camry</SelectItem>
-                  <SelectItem value="accord">Accord</SelectItem>
-                </SelectContent>
-              </Select>
+              <Input
+                type="text"
+                placeholder="Enter Model"
+                value={searchFilters.model}
+                onChange={(e) => updateFilter("model", e.target.value)}
+              />
             </div>
 
             <div className="space-y-2">
@@ -84,17 +84,12 @@ export default function SearchSection() {
                 <MapPin className="w-4 h-4 mr-2 text-blue-600" />
                 City
               </label>
-              <Select onValueChange={(value) => updateFilter("city", value)}>
-                <SelectTrigger className="h-12 border-slate-300 focus:border-blue-500">
-                  <SelectValue placeholder="Select City" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="karachi">Karachi</SelectItem>
-                  <SelectItem value="lahore">Lahore</SelectItem>
-                  <SelectItem value="islamabad">Islamabad</SelectItem>
-                  <SelectItem value="rawalpindi">Rawalpindi</SelectItem>
-                </SelectContent>
-              </Select>
+              <Input
+                type="text"
+                placeholder="Enter City"
+                value={searchFilters.city}
+                onChange={(e) => updateFilter("city", e.target.value)}
+              />
             </div>
 
             <div className="space-y-2">
@@ -102,17 +97,12 @@ export default function SearchSection() {
                 <Calendar className="w-4 h-4 mr-2 text-blue-600" />
                 Year
               </label>
-              <Select onValueChange={(value) => updateFilter("year", value)}>
-                <SelectTrigger className="h-12 border-slate-300 focus:border-blue-500">
-                  <SelectValue placeholder="Select Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="2024">2024</SelectItem>
-                  <SelectItem value="2023">2023</SelectItem>
-                  <SelectItem value="2022">2022</SelectItem>
-                  <SelectItem value="2021">2021</SelectItem>
-                </SelectContent>
-              </Select>
+              <Input
+                type="text"
+                placeholder="Enter Year"
+                value={searchFilters.year}
+                onChange={(e) => updateFilter("year", e.target.value)}
+              />
             </div>
 
             <div className="space-y-2">
@@ -121,14 +111,14 @@ export default function SearchSection() {
                 Price Range
               </label>
               <Select onValueChange={(value) => updateFilter("priceRange", value)}>
-                <SelectTrigger className="h-12 border-slate-300 focus:border-blue-500">
+                <SelectTrigger className="h-9 border-slate-300 focus:border-blue-500">
                   <SelectValue placeholder="Select Range" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="0-1000000">Under 10 Lakh</SelectItem>
                   <SelectItem value="1000000-2000000">10-20 Lakh</SelectItem>
                   <SelectItem value="2000000-5000000">20-50 Lakh</SelectItem>
-                  <SelectItem value="5000000+">Above 50 Lakh</SelectItem>
+                  <SelectItem value="5000000-200000000">Above 50 Lakh</SelectItem>
                 </SelectContent>
               </Select>
             </div>

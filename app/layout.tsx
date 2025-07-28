@@ -13,7 +13,7 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: "CarLo - Premium Car Marketplace",
+  title: "AhmedSeCarLo - Premium Car Marketplace",
   description: "Discover your dream car from our curated collection of premium vehicles",
 }
 

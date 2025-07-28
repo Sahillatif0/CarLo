@@ -15,7 +15,7 @@ export default function Footer() {
                 <Car className="w-5 h-5 text-white" />
               </div>
               <span className="text-2xl font-bold font-poppins">
-                Car<span className="text-blue-400">Lo</span>
+                Ahmed<span className="text-blue-600">Se</span>Car<span className="text-blue-600">Lo</span>
               </span>
             </div>
 
@@ -84,11 +84,11 @@ export default function Footer() {
             <div className="space-y-4">
               <div className="flex items-center text-slate-400">
                 <Phone className="w-4 h-4 mr-3 text-blue-400" />
-                <span className="text-sm">+92 300 1234567</span>
+                <span className="text-sm">+{process.env.NEXT_PUBLIC_TEL}</span>
               </div>
               <div className="flex items-center text-slate-400">
                 <Mail className="w-4 h-4 mr-3 text-blue-400" />
-                <span className="text-sm">info@CarLo.pk</span>
+                <span className="text-sm">{process.env.NEXT_PUBLIC_EMAIL}</span>
               </div>
               <div className="flex items-start text-slate-400">
                 <MapPin className="w-4 h-4 mr-3 text-blue-400 mt-0.5" />
@@ -125,7 +125,7 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="border-t border-slate-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-slate-400 text-sm">&copy; 2024 CarLo. All rights reserved.</p>
+          <p className="text-slate-400 text-sm">&copy; 2025 AhmedSeCarLo. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link href="/privacy" className="text-slate-400 hover:text-white text-sm transition-colors">
               Privacy Policy

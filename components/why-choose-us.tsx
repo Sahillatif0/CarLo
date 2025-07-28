@@ -50,7 +50,7 @@ export default function WhyChooseUs() {
     <section className="py-20 bg-gradient-to-br from-slate-50 to-blue-50/30">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl font-bold text-slate-900 mb-4 font-poppins">Why Choose CarLo?</h2>
+          <h2 className="text-4xl font-bold text-slate-900 mb-4 font-poppins">Why Choose AhmedSeCarLo?</h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
             We're committed to providing you with the best car buying experience through our premium services and
             trusted network

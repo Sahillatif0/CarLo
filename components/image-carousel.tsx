@@ -5,16 +5,7 @@ import { useState } from "react"
 import { ChevronLeft, ChevronRight, Maximize2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const images = [
-  "/car.png?height=500&width=800",
-  "/car.png?height=500&width=800",
-  "/car.png?height=500&width=800",
-  "/car.png?height=500&width=800",
-  "/car.png?height=500&width=800",
-  "/car.png?height=500&width=800",
-]
-
-export default function ImageCarousel() {
+export default function ImageCarousel({images}:{images: string[]}) {
   const [currentImage, setCurrentImage] = useState(0)
 
   const nextImage = () => {
@@ -28,20 +19,22 @@ export default function ImageCarousel() {
   return (
     <div className="space-y-4">
       {/* Main Image */}
-      <div className="relative bg-slate-100 rounded-2xl overflow-hidden group">
+      <div className="w-full max-w-full sm:w-full relative bg-slate-100 rounded-2xl overflow-hidden group">
         <Image
           src={images[currentImage] || "/car.png"}
           alt="Car Image"
           width={800}
           height={500}
-          className="w-full h-96 lg:h-[500px] object-cover"
+          className="w-full h-[45vw] max-h-96 sm:h-72 md:h-96 lg:h-[500px] object-cover transition-all duration-300"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 800px"
+          priority
         />
 
         {/* Navigation Buttons */}
         <Button
           variant="ghost"
           size="sm"
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg"
+          className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 sm:p-3 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg"
           onClick={prevImage}
         >
           <ChevronLeft className="w-5 h-5" />
@@ -50,7 +43,7 @@ export default function ImageCarousel() {
         <Button
           variant="ghost"
           size="sm"
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg"
+          className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 sm:p-3 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg"
           onClick={nextImage}
         >
           <ChevronRight className="w-5 h-5" />
@@ -60,13 +53,14 @@ export default function ImageCarousel() {
         <Button
           variant="ghost"
           size="sm"
-          className="absolute top-4 right-4 bg-white/90 hover:bg-white rounded-full p-3 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg"
+          className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-white/90 hover:bg-white rounded-full p-2 sm:p-3 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg"
+          onClick={() => window.open(images[currentImage], "_blank")}
         >
           <Maximize2 className="w-5 h-5" />
         </Button>
 
         {/* Image Counter */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-full text-sm backdrop-blur-sm">
+        <div className="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm backdrop-blur-sm">
           {currentImage + 1} / {images.length}
         </div>
       </div>

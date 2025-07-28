@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { MapPin, Calendar, Gauge, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { formatPrice } from "@/lib/common-functions"
 
 const relatedCars = [
   {
@@ -12,7 +13,7 @@ const relatedCars = [
     year: "2022",
     mileage: "25,000 km",
     rating: 4.9,
-    image: "/car.png?height=200&width=300",
+    images: ["/car.png?height=200&width=300"],
   },
   {
     id: 3,
@@ -22,7 +23,7 @@ const relatedCars = [
     year: "2023",
     mileage: "12,000 km",
     rating: 4.7,
-    image: "/car.png?height=200&width=300",
+    images: ["/car.png?height=200&width=300"],
   },
   {
     id: 6,
@@ -32,11 +33,11 @@ const relatedCars = [
     year: "2023",
     mileage: "5,000 km",
     rating: 4.9,
-    image: "/car.png?height=200&width=300",
+    images: ["/car.png?height=200&width=300"],
   },
 ]
 
-export default function RelatedCars() {
+export default function RelatedCars({relatedCars}:{relatedCars: any[]}) {
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -53,13 +54,14 @@ export default function RelatedCars() {
             className="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-200/50 animate-slide-up hover:-translate-y-1"
             style={{ animationDelay: `${index * 100}ms` }}
           >
-            <div className="relative overflow-hidden">
+            <div className="relative w-full h-64 overflow-hidden">
               <Image
-                src={car.image || "/car.png"}
+                src={car.images[0] || "/car.png"}
                 alt={car.title}
-                width={300}
-                height={200}
-                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority={index === 0}
+                className="w-full h-54 object-cover group-hover:scale-110 transition-transform duration-700"
               />
 
               <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center">
@@ -75,12 +77,12 @@ export default function RelatedCars() {
                 </h3>
               </Link>
 
-              <div className="text-xl font-bold text-blue-600 mb-4">{car.price}</div>
+              <div className="text-xl font-bold text-blue-600 mb-4">{formatPrice(parseFloat(car.price))}</div>
 
               <div className="space-y-2 text-sm text-slate-600 mb-4">
                 <div className="flex items-center">
                   <MapPin className="w-4 h-4 mr-2 text-blue-500" />
-                  {car.location}
+                  {car.city}
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -96,7 +98,7 @@ export default function RelatedCars() {
 
               <Button
                 asChild
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                className="w-full h-[45px] md:h-[40px] text-md bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
               >
                 <Link href={`/cars/${car.id}`}>View Details</Link>
               </Button>

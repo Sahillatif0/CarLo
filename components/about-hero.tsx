@@ -18,7 +18,7 @@ export default function AboutHero() {
               About
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
                 {" "}
-                CarLo
+                AhmedSeCarLo
               </span>
             </h1>
 

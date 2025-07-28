@@ -26,7 +26,7 @@ export default function HeroSection() {
         <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-20">
+      <div className="relative z-10 max-w-7xl my-10 sm:mx-auto px-9 sm:px-4 py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div className="text-center lg:text-left animate-slide-up">
@@ -92,12 +92,12 @@ export default function HeroSection() {
               />
 
               {/* Floating Elements */}
-              <div className="absolute top-10 right-10 bg-white/10 backdrop-blur-md rounded-2xl p-4 animate-bounce-slow">
+              <div className="absolute top-2 right-2 sm:top-10 sm:right-10 bg-white/10 backdrop-blur-md rounded-2xl p-4 animate-bounce-slow">
                 <div className="text-white text-sm font-medium">Premium Quality</div>
                 <div className="text-blue-400 text-xs">Verified Dealers</div>
               </div>
 
-              <div className="absolute bottom-10 left-10 bg-white/10 backdrop-blur-md rounded-2xl p-4 animate-bounce-slow animation-delay-1000">
+              <div className="absolute bottom-2 left-2 sm:bottom-10 sm:left-10 bg-white/10 backdrop-blur-md rounded-2xl p-4 animate-bounce-slow animation-delay-1000">
                 <div className="text-white text-sm font-medium">Best Prices</div>
                 <div className="text-green-400 text-xs">Guaranteed</div>
               </div>

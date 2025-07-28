@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 
-export default function ContactSection() {
+export default function ContactSection({sellerDetails}: {sellerDetails?: any}) {
   return (
     <div className="space-y-6">
       {/* Seller Card */}
@@ -22,10 +22,10 @@ export default function ContactSection() {
         <div className="flex items-center mb-6">
           <Avatar className="w-16 h-16 mr-4">
             <AvatarImage src="/car.png?height=64&width=64" />
-            <AvatarFallback className="bg-blue-100 text-blue-600 text-lg font-semibold">AS</AvatarFallback>
+            <AvatarFallback className="bg-blue-100 text-blue-600 text-lg font-semibold">{sellerDetails?.name?.charAt(0)}</AvatarFallback>
           </Avatar>
           <div>
-            <h3 className="text-xl font-bold text-slate-900 font-poppins">Ahmed Shah Motors</h3>
+            <h3 className="text-xl font-bold text-slate-900 font-poppins">{sellerDetails?.name}</h3>
             <div className="flex items-center text-sm text-slate-600 mb-2">
               <Star className="w-4 h-4 text-yellow-400 mr-1 fill-current" />
               4.9 (127 reviews)
@@ -40,15 +40,15 @@ export default function ContactSection() {
         <div className="space-y-4 mb-6">
           <div className="flex items-center text-sm text-slate-600">
             <MapPin className="w-4 h-4 mr-2 text-blue-500" />
-            Karachi, Sindh
+            {sellerDetails?.address || "Karachi, Sindh"}
           </div>
           <div className="flex items-center text-sm text-slate-600">
             <Clock className="w-4 h-4 mr-2 text-blue-500" />
-            Usually responds within 1 hour
+            Usually responds within {sellerDetails?.responseTime || "1 hour"}
           </div>
           <div className="flex items-center text-sm text-slate-600">
             <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-            Active 2 hours ago
+            Active {sellerDetails?.lastActive || "2 hours ago"}
           </div>
         </div>
 
@@ -56,6 +56,7 @@ export default function ContactSection() {
           <Button
             className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
             size="lg"
+            onClick={() => window.location.href = `tel:${sellerDetails?.phone || "+923001234567"}`}
           >
             <Phone className="w-5 h-5 mr-2" />
             Call Now
@@ -65,12 +66,14 @@ export default function ContactSection() {
             variant="outline"
             className="w-full border-green-500 text-green-600 hover:bg-green-50 hover:border-green-600 bg-transparent"
             size="lg"
+            onClick={() => window.location.href = `https://wa.me/${sellerDetails?.whatsapp || "+923001234567"}`}
           >
             <MessageCircle className="w-5 h-5 mr-2" />
             WhatsApp
           </Button>
 
-          <Button variant="outline" className="w-full bg-transparent" size="lg">
+          <Button variant="outline" className="w-full bg-transparent" size="lg" onClick={() => window.location.href = `mailto:${sellerDetails?.email || "example@example.com"}`}>
+            <MessageCircle className="w-5 h-5 mr-2" />
             Send Message
           </Button>
         </div>

@@ -141,28 +141,8 @@ export default function FilterPanel({filters, setFilters}:{filters:any, setFilte
             Year
           </Label>
           <div className="grid grid-cols-2 gap-2">
-            <Select value={filters.yearfrom} onValueChange={(value) => updateFilter("yearfrom", value)}>
-              <SelectTrigger className="border-slate-300 focus:border-blue-500">
-                <SelectValue placeholder="From" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="2020">2020</SelectItem>
-                <SelectItem value="2021">2021</SelectItem>
-                <SelectItem value="2022">2022</SelectItem>
-                <SelectItem value="2023">2023</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={filters.yearto} onValueChange={(value) => updateFilter("yearto", value)}>
-              <SelectTrigger className="border-slate-300 focus:border-blue-500">
-                <SelectValue placeholder="To" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="2021">2021</SelectItem>
-                <SelectItem value="2022">2022</SelectItem>
-                <SelectItem value="2023">2023</SelectItem>
-                <SelectItem value="2024">2024</SelectItem>
-              </SelectContent>
-            </Select>
+            <Input type="number" value={filters.yearfrom} onChange={(e) => updateFilter("yearfrom", e.target.value)} />
+            <Input type="number" value={filters.yearto} onChange={(e) => updateFilter("yearto", e.target.value)} />
           </div>
         </div>
 
@@ -222,10 +202,10 @@ export default function FilterPanel({filters, setFilters}:{filters:any, setFilte
 
         {/* Action Buttons */}
         <div className="space-y-3 pt-4 border-t border-slate-200">
-          <Button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700" onClick={handleSearch}>
+          <Button className="w-full h-[50px] md:h-[40px] bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700" onClick={handleSearch}>
             Apply Filters
           </Button>
-          <Button variant="outline" className="w-full border-slate-300 hover:bg-slate-50 bg-transparent">
+          <Button variant="outline" className="w-full h-[50px] md:h-[40px] border-slate-300 hover:bg-slate-50 bg-transparent">
             Clear All
           </Button>
         </div>

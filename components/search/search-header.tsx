@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Grid, List } from "lucide-react"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 
 interface SearchHeaderProps {
   filters: any
@@ -33,7 +34,7 @@ export default function SearchHeader({ filters, sortBy, setSortBy, viewMode, set
           <p className="text-slate-600 text-lg">Discover your perfect car from our premium collection</p>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex justify-between items-center gap-4">
           {/* View Mode Toggle */}
           <div className="flex items-center bg-white rounded-lg border border-slate-200 p-1">
             <Button
@@ -55,19 +56,22 @@ export default function SearchHeader({ filters, sortBy, setSortBy, viewMode, set
           </div>
 
           {/* Sort Dropdown */}
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="border border-slate-300 rounded-lg px-4 py-2 text-sm focus:border-blue-500 focus:outline-none bg-white"
-          >
-            <option value="latest">Latest First</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
-            <option value="year-new">Year: Newest First</option>
-            <option value="year-old">Year: Oldest First</option>
-            <option value="mileage-low">Mileage: Low to High</option>
-            <option value="popular">Most Popular</option>
-          </select>
+            <div className="w-56">
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-full">
+              <SelectValue placeholder="Sort By" />
+              </SelectTrigger>
+              <SelectContent>
+              <SelectItem value="latest">Latest First</SelectItem>
+              <SelectItem value="price-low">Price: Low to High</SelectItem>
+              <SelectItem value="price-high">Price: High to Low</SelectItem>
+              <SelectItem value="year-new">Year: Newest First</SelectItem>
+              <SelectItem value="year-old">Year: Oldest First</SelectItem>
+              <SelectItem value="mileage-low">Mileage: Low to High</SelectItem>
+              <SelectItem value="popular">Most Popular</SelectItem>
+              </SelectContent>
+            </Select>
+            </div>
         </div>
       </div>
     </div>

@@ -226,3 +226,88 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
+@media (max-width: 768px) {
+  /* Better mobile typography */
+  .mobile-title {
+    font-size: 2rem;
+    line-height: 1.2;
+    font-weight: 700;
+  }
+
+  .mobile-subtitle {
+    font-size: 1.125rem;
+    line-height: 1.4;
+  }
+
+  /* Mobile card improvements */
+  .mobile-card {
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Better mobile buttons */
+  .mobile-btn {
+    height: 3rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 0.75rem;
+  }
+
+  /* Mobile-optimized spacing */
+  .mobile-section {
+    padding: 1.5rem 1rem;
+  }
+
+  /* Touch-friendly elements */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Mobile navigation improvements */
+  .mobile-nav {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.95);
+  }
+}
+
+/* Improved mobile animations */
+@keyframes mobile-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-mobile-slide-up {
+  animation: mobile-slide-up 0.4s ease-out forwards;
+}
+
+/* Mobile-specific gradients */
+.mobile-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.mobile-card-gradient {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+/* Better mobile scrollbars */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+  }
+}

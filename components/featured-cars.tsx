@@ -1,9 +1,13 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { MapPin, Calendar, Gauge, Heart, Star } from "lucide-react"
+import { useEffect, useState } from "react"
+import { formatPrice } from "@/lib/common-functions"
 
-const featuredCars = [
+const featuredCarss = [
   {
     id: 1,
     title: "BMW 3 Series 2023",
@@ -13,7 +17,7 @@ const featuredCars = [
     year: "2023",
     mileage: "15,000 km",
     rating: 4.8,
-    image: "/car.png?height=250&width=400",
+    images: ["/car.png?height=250&width=400"],
     badge: "Featured",
     badgeColor: "bg-gradient-to-r from-yellow-400 to-orange-500",
   },
@@ -25,7 +29,7 @@ const featuredCars = [
     year: "2022",
     mileage: "25,000 km",
     rating: 4.9,
-    image: "/car.png?height=250&width=400",
+    images: ["/car.png?height=250&width=400"],
     badge: "Premium",
     badgeColor: "bg-gradient-to-r from-purple-500 to-pink-500",
   },
@@ -37,13 +41,29 @@ const featuredCars = [
     year: "2023",
     mileage: "12,000 km",
     rating: 4.7,
-    image: "/car.png?height=250&width=400",
+    images: ["/car.png?height=250&width=400"],
     badge: "New",
     badgeColor: "bg-gradient-to-r from-green-500 to-emerald-500",
   },
 ]
 
 export default function FeaturedCars() {
+  const [featuredCars, setFeaturedCars] = useState<any>(featuredCarss)
+  const fetchCars = () =>{
+    fetch("/api/cars/featured")
+    .then(res => res.json())
+    .then(data => {
+      console.log(data.cars)
+      if(data.cars && data.cars.length>0)
+        setFeaturedCars(data.cars)
+      else
+        console.log("Error fetching cars")
+    })
+  }
+
+  useEffect(()=>{
+    fetchCars()
+  },[])
   return (
     <section className="py-20 bg-gradient-to-br from-slate-50 to-blue-50/30">
       <div className="max-w-7xl mx-auto px-4">
@@ -55,19 +75,20 @@ export default function FeaturedCars() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredCars.map((car, index) => (
+          {featuredCars.map((car:any, index:number) => (
             <div
               key={car.id}
               className="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-slate-200/50 animate-slide-up"
               style={{ animationDelay: `${index * 200}ms` }}
             >
-              <div className="relative overflow-hidden">
+              <div className="relative w-full h-64 overflow-hidden">
                 <Image
-                  src={car.image || "/car.png"}
+                  src={car.images[0] || "/car.png"}
                   alt={car.title}
-                  width={400}
-                  height={250}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority={index === 0}
+                  className="w-full h-54 object-cover group-hover:scale-110 transition-transform duration-700"
                 />
 
                 {/* Badge */}
@@ -102,9 +123,9 @@ export default function FeaturedCars() {
 
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <div className="text-2xl font-bold text-blue-600">{car.price}</div>
+                    <div className="text-2xl font-bold text-blue-600">{formatPrice(car.price)} PKR</div>
                     {car.originalPrice && (
-                      <div className="text-sm text-slate-500 line-through">{car.originalPrice}</div>
+                      <div className="text-sm text-slate-500 line-through">{formatPrice(car.originalPrice)} PKR</div>
                     )}
                   </div>
                 </div>
@@ -112,7 +133,7 @@ export default function FeaturedCars() {
                 <div className="space-y-2 text-sm text-slate-600 mb-6">
                   <div className="flex items-center">
                     <MapPin className="w-4 h-4 mr-2 text-blue-500" />
-                    {car.location}
+                    {car.city}
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
@@ -126,14 +147,14 @@ export default function FeaturedCars() {
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full h-[45px] md:h-[40px]">
                   <Button
                     asChild
-                    className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                    className="flex-1 text-md h-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
                   >
                     <Link href={`/cars/${car.id}`}>View Details</Link>
                   </Button>
-                  <Button variant="outline" size="sm" className="px-4 bg-transparent">
+                  <Button variant="outline" size="sm" className="px-4 bg-transparent h-full">
                     <Heart className="w-4 h-4" />
                   </Button>
                 </div>

@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation"
 import FilterPanel from "@/components/filter-panel"
 import CarGrid from "@/components/car-grid"
 import SearchHeader from "@/components/search/search-header"
-import SearchFilters from "@/components/search/search-filters"
+import { SearchInput } from "@/components/search/search-input"
 
 function SearchContent() {
   const searchParams = useSearchParams()
@@ -13,9 +13,11 @@ function SearchContent() {
     make: searchParams.get("make") || "",
     model: searchParams.get("model") || "",
     city: searchParams.get("city") || "",
-    yearfrom: searchParams.get("yearfrom") || "",
-    yearto: searchParams.get("yearto") || "",
-    priceRange: searchParams.get("priceRange") || [100000,20000000],
+    yearfrom: searchParams.get("yearfrom") || "2000",
+    yearto: searchParams.get("yearto") || "2025",
+    priceRange: searchParams.get("minPrice") && searchParams.get("maxPrice")
+      ? [Number(searchParams.get("minPrice")), Number(searchParams.get("maxPrice"))]
+      : [100000, 20000000],
     bodyType: searchParams.get("bodyType") || "",
     fuelType: searchParams.get("fuelType") || "",
     query: searchParams.get("q") || "",
@@ -34,8 +36,9 @@ function SearchContent() {
           viewMode={viewMode}
           setViewMode={setViewMode}
         />
+        <SearchInput filters={filters} setFilters={setFilters} />
+        {/* <SearchFilters filters={filters} setFilters={setFilters} /> */}
 
-        <SearchFilters filters={filters} setFilters={setFilters} />
 
         <div className="grid lg:grid-cols-4 gap-8 mt-8">
           <div className="lg:col-span-1">

@@ -46,7 +46,7 @@ export default function SearchFilters({ filters, setFilters }: SearchFiltersProp
             className="flex items-center gap-1 bg-blue-100 text-blue-800 hover:bg-blue-200"
           >
             <span className="capitalize">{key}:</span>
-            <span>{value}</span>
+            <span>{Array.isArray(value) ? value.join(", ") : String(value)}</span>
             <Button
               variant="ghost"
               size="sm"

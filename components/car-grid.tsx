@@ -5,6 +5,8 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { MapPin, Calendar, Gauge, Heart, Star, Eye, Phone, MessageCircle } from "lucide-react"
 import { useState, useEffect } from "react"
+import { SkeletonGrid } from "./skeleton-card"
+import { formatPrice } from "@/lib/common-functions"
 
 interface CarGridProps {
   viewMode?: "grid" | "list"
@@ -12,116 +14,48 @@ interface CarGridProps {
   filters?: any
 }
 
-const cars = [
-  {
-    id: 1,
-    title: "BMW 3 Series 2023",
-    price: "PKR 85,00,000",
-    originalPrice: "PKR 90,00,000",
-    location: "Karachi, Sindh",
-    year: "2023",
-    mileage: "15,000 km",
-    rating: 4.8,
-    views: 245,
-    image: "/car.png?height=250&width=400",
-    badge: "Featured",
-    badgeColor: "bg-gradient-to-r from-yellow-400 to-orange-500",
-    isFeatured: true,
-  },
-  {
-    id: 2,
-    title: "Mercedes C-Class 2022",
-    price: "PKR 95,00,000",
-    location: "Lahore, Punjab",
-    year: "2022",
-    mileage: "25,000 km",
-    rating: 4.9,
-    views: 189,
-    image: "/car.png?height=250&width=400",
-    badge: "Premium",
-    badgeColor: "bg-gradient-to-r from-purple-500 to-pink-500",
-    isFeatured: true,
-  },
-  {
-    id: 3,
-    title: "Audi A4 2023",
-    price: "PKR 78,00,000",
-    location: "Islamabad, ICT",
-    year: "2023",
-    mileage: "12,000 km",
-    rating: 4.7,
-    views: 156,
-    image: "/car.png?height=250&width=400",
-    badge: "New",
-    badgeColor: "bg-gradient-to-r from-green-500 to-emerald-500",
-    isFeatured: false,
-  },
-  {
-    id: 4,
-    title: "Toyota Camry Hybrid 2023",
-    price: "PKR 65,00,000",
-    location: "Karachi, Sindh",
-    year: "2023",
-    mileage: "8,000 km",
-    rating: 4.6,
-    views: 203,
-    image: "/car.png?height=250&width=400",
-    badge: "Eco-Friendly",
-    badgeColor: "bg-gradient-to-r from-green-400 to-blue-500",
-    isFeatured: false,
-  },
-  {
-    id: 5,
-    title: "Honda Accord 2022",
-    price: "PKR 58,00,000",
-    location: "Lahore, Punjab",
-    year: "2022",
-    mileage: "18,000 km",
-    rating: 4.5,
-    views: 134,
-    image: "/car.png?height=250&width=400",
-    isFeatured: false,
-  },
-  {
-    id: 6,
-    title: "Lexus ES 300h 2023",
-    price: "PKR 1,20,00,000",
-    location: "Islamabad, ICT",
-    year: "2023",
-    mileage: "5,000 km",
-    rating: 4.9,
-    views: 298,
-    image: "/car.png?height=250&width=400",
-    badge: "Luxury",
-    badgeColor: "bg-gradient-to-r from-gold-400 to-yellow-600",
-    isFeatured: true,
-  },
-]
-
 export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters }: CarGridProps) {
-  const [filteredCars, setFilteredCars] = useState<(typeof cars[number])[]>(cars)
+  const [filteredCars, setFilteredCars] = useState<any[]>([])
+  const [unfilteredCars, setUnfilteredCars] = useState<any[]>([])
+  const [isDataUpdated, setIsDataUpdated] = useState(false)
   const handleContactDealer = (carId: number) => {
     // Simulate contact functionality
     alert(`Contacting dealer for car ID: ${carId}`)
   }
 
+  useEffect(() => {
+    fetch("/api/cars")
+      .then(res => res.json())
+      .then(data => {
+        console.log("Fetched Cars details:", data)
+        if(data.cars && data.cars.length > 0) {
+          setUnfilteredCars(data.cars)
+          setFilteredCars(data.cars)
+          setIsDataUpdated(true)
+        }
+        else {
+          console.error("No cars found in the response")
+          setIsDataUpdated(false)
+        }
+      })
+      .catch(err => console.error("Error fetching cars:", err))
+  }, [])
   const handleWhatsApp = (carId: number) => {
     // Simulate WhatsApp functionality
     const message = `Hi, I'm interested in the car with ID: ${carId}`
     const whatsappUrl = `https://wa.me/923001234567?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, "_blank")
   }
-
   // Apply filters if provided
   // Enhanced filtering logic
   const filterCars = () => {
-    let filtered = cars
+    let filtered = unfilteredCars
     if (filters) {
-      filtered = cars.filter(car => {
+      filtered = unfilteredCars.filter(car => {
         let matches = true
 
         // Location filter (city or province)
-        if (filters.city && !car.location.toLowerCase().includes(filters.city.toLowerCase()) && filters.city !== "all") {
+        if (filters.city && !car.city.toLowerCase().includes(filters.city.toLowerCase()) && filters.city !== "all") {
           matches = false
         }
 
@@ -143,8 +77,8 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
 
         // Price range filter
         if (filters.priceRange && Array.isArray(filters.priceRange)) {
-          const carPrice = parseInt(car.price.replace(/[^\d]/g, ""))
-          if (carPrice < filters.priceRange[0] || carPrice > filters.priceRange[1]) {
+          // const carPrice = parseInt(car.price.replace(/[^\d]/g, ""))
+          if (car.price < filters.priceRange[0] || car.price > filters.priceRange[1]) {
             matches = false
           }
         }
@@ -174,17 +108,17 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
 
     // Sort the filtered cars based on sortBy
     if (sortBy === "latest") {
-      filtered.sort((a, b) => b.year.localeCompare(a.year))
+      filtered.sort((a, b) => b.year - a.year)
     } else if (sortBy === "price-low") {
-      filtered.sort((a, b) => parseInt(a.price.replace(/[^\d]/g, "")) - parseInt(b.price.replace(/[^\d]/g, "")))
+      filtered.sort((a, b) =>a.price - b.price)
     } else if (sortBy === "price-high") {
-      filtered.sort((a, b) => parseInt(b.price.replace(/[^\d]/g, "")) - parseInt(a.price.replace(/[^\d]/g, "")))
+      filtered.sort((a, b) => b.price - a.price)
     } else if (sortBy === "year-new") {
-      filtered.sort((a, b) => b.year.localeCompare(a.year))
+      filtered.sort((a, b) => b.year - a.year)
     } else if (sortBy === "mileage-low") {
-      filtered.sort((a, b) => parseInt(a.mileage.replace(/[^\d]/g, "")) - parseInt(b.mileage.replace(/[^\d]/g, "")))
+      filtered.sort((a, b) => a.mileage - b.mileage)
     } else if (sortBy === "mileage-high") {
-      filtered.sort((a, b) => parseInt(b.mileage.replace(/[^\d]/g, "")) - parseInt(a.mileage.replace(/[^\d]/g, "")))
+      filtered.sort((a, b) => b.mileage - a.mileage)
     }
 
 
@@ -196,6 +130,11 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, sortBy])
 
+  if (!isDataUpdated) {
+    return (
+      <SkeletonGrid />
+    )
+  }
   if (viewMode === "list") {
     return (
       <div className="space-y-6">
@@ -219,7 +158,7 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
               <div className="flex flex-col md:flex-row">
                 <div className="relative md:w-80 h-48 md:h-auto overflow-hidden">
                   <Image
-                    src={car.image || "/car.png"}
+                    src={car.images[0] || "/car.png"}
                     alt={car.title}
                     width={400}
                     height={250}
@@ -252,9 +191,9 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
                       </Link>
 
                       <div className="flex items-center gap-4 mb-4">
-                        <div className="text-3xl font-bold text-blue-600">{car.price}</div>
+                        <div className="text-3xl font-bold text-blue-600">{formatPrice(car.price)} PKR</div>
                         {car.originalPrice && (
-                          <div className="text-lg text-slate-500 line-through">{car.originalPrice}</div>
+                          <div className="text-lg text-slate-500 line-through">{formatPrice(car.originalPrice)} PKR</div>
                         )}
                       </div>
                     </div>
@@ -267,7 +206,7 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
                   <div className="grid md:grid-cols-3 gap-4 mb-6 text-sm text-slate-600">
                     <div className="flex items-center">
                       <MapPin className="w-4 h-4 mr-2 text-blue-500" />
-                      {car.location}
+                      {car.city}
                     </div>
                     <div className="flex items-center">
                       <Calendar className="w-4 h-4 mr-2 text-blue-500" />
@@ -279,21 +218,21 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
                     </div>
                   </div>
 
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 w-full h-[50px] md:h-[40px]">
                     <Button
                       asChild
-                      className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                      className="flex-1 text-md bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 h-full"
                     >
                       <Link href={`/cars/${car.id}`}>View Details</Link>
                     </Button>
-                    <Button variant="outline" onClick={() => handleContactDealer(car.id)} className="bg-transparent">
+                    <Button variant="outline" onClick={() => handleContactDealer(car.id)} className="bg-transparent h-full">
                       <Phone className="w-4 h-4 mr-2" />
                       Call
                     </Button>
                     <Button
                       variant="outline"
                       onClick={() => handleWhatsApp(car.id)}
-                      className="bg-transparent border-green-500 text-green-600 hover:bg-green-50"
+                      className="bg-transparent border-green-500 text-green-600 hover:bg-green-50 h-full"
                     >
                       <MessageCircle className="w-4 h-4" />
                     </Button>
@@ -328,7 +267,7 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
           >
             <div className="relative overflow-hidden">
               <Image
-                src={car.image || "/car.png"}
+                src={car.images[0] || "/car.png"}
                 alt={car.title}
                 width={400}
                 height={250}
@@ -375,15 +314,15 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
 
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <div className="text-2xl font-bold text-blue-600">{car.price}</div>
-                  {car.originalPrice && <div className="text-sm text-slate-500 line-through">{car.originalPrice}</div>}
+                  <div className="text-2xl font-bold text-blue-600">{formatPrice(car.price)} PKR</div>
+                  {car.originalPrice && <div className="text-sm text-slate-500 line-through">{formatPrice(car.originalPrice)} PKR</div>}
                 </div>
               </div>
 
               <div className="space-y-2 text-sm text-slate-600 mb-6">
                 <div className="flex items-center">
                   <MapPin className="w-4 h-4 mr-2 text-blue-500" />
-                  {car.location}
+                  {car.city}
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -397,10 +336,10 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
                 </div>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 w-full h-[50px] md:h-[40px]">
                 <Button
                   asChild
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                  className="flex-1 text-md h-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
                 >
                   <Link href={`/cars/${car.id}`}>View Details</Link>
                 </Button>
@@ -408,7 +347,7 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
                   variant="outline"
                   size="sm"
                   onClick={() => handleWhatsApp(car.id)}
-                  className="px-4 hover:bg-green-50 hover:border-green-300 bg-transparent"
+                  className="px-4 hover:bg-green-50 hover:border-green-300 bg-transparent h-full"
                 >
                   <MessageCircle className="w-4 h-4" />
                 </Button>
