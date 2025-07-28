@@ -23,16 +23,25 @@ export default function SearchSection() {
     Object.entries(searchFilters).forEach(([key, value]) => {
       if (value) {
         if(key==="priceRange"){
-          value = value.split("-")
-          params.append("minPrice", value[0])
-          params.append("maxPrice", value[1])
+          if (typeof value === "string") {
+            const [minPrice, maxPrice] = value.split("-");
+            params.append("minPrice", minPrice);
+            params.append("maxPrice", maxPrice);
+          }
         }
         else if (typeof value === "string"){
           value = value.trim() // Ensure no leading/trailing spaces 
           params.append(key, value)
         }
-        else
-          params.append(key, value)
+        else if (Array.isArray(value)) {
+          value.forEach((v) => params.append(key, String(v)))
+        }
+        else if (typeof value === "object") {
+          params.append(key, JSON.stringify(value))
+        }
+        else {
+          params.append(key, String(value))
+        }
       }
     })
 

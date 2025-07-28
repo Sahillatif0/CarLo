@@ -8,7 +8,7 @@ export const SearchInput = ({ filters, setFilters }: { filters: any; setFilters:
   const [searchQuery, setSearchQuery] = React.useState("");
 
   const handleSearch = () => {
-      setFilters((prev) => ({ ...prev, query: searchQuery }))
+      setFilters((prev: any) => ({ ...prev, query: searchQuery }))
   };
 
   return (

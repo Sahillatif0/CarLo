@@ -7,6 +7,7 @@ import { MapPin, Calendar, Gauge, Heart, Star, Eye, Phone, MessageCircle } from 
 import { useState, useEffect } from "react"
 import { SkeletonGrid } from "./skeleton-card"
 import { formatPrice } from "@/lib/common-functions"
+import { Car } from "@/types/types"
 
 interface CarGridProps {
   viewMode?: "grid" | "list"
@@ -15,10 +16,10 @@ interface CarGridProps {
 }
 
 export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters }: CarGridProps) {
-  const [filteredCars, setFilteredCars] = useState<any[]>([])
-  const [unfilteredCars, setUnfilteredCars] = useState<any[]>([])
+  const [filteredCars, setFilteredCars] = useState<Car[]>([])
+  const [unfilteredCars, setUnfilteredCars] = useState<Car[]>([])
   const [isDataUpdated, setIsDataUpdated] = useState(false)
-  const handleContactDealer = (carId: number) => {
+  const handleContactDealer = (carId: string) => {
     // Simulate contact functionality
     alert(`Contacting dealer for car ID: ${carId}`)
   }
@@ -40,7 +41,7 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
       })
       .catch(err => console.error("Error fetching cars:", err))
   }, [])
-  const handleWhatsApp = (carId: number) => {
+  const handleWhatsApp = (carId: string) => {
     // Simulate WhatsApp functionality
     const message = `Hi, I'm interested in the car with ID: ${carId}`
     const whatsappUrl = `https://wa.me/923001234567?text=${encodeURIComponent(message)}`
@@ -55,15 +56,15 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
         let matches = true
 
         // Location filter (city or province)
-        if (filters.city && !car.city.toLowerCase().includes(filters.city.toLowerCase()) && filters.city !== "all") {
+        if (filters.city && !car.city?.toLowerCase().includes(filters.city.toLowerCase()) && filters.city !== "all") {
           matches = false
         }
 
-        if ((filters.make && !car.title.toLowerCase().includes(filters.make.toLowerCase())) && filters.make !== "" && filters.make !== "all") {
+        if ((filters.make && !car.title?.toLowerCase().includes(filters.make.toLowerCase())) && filters.make !== "" && filters.make !== "all") {
           matches = false
         }
 
-        if ((filters.model && !car.title.toLowerCase().includes(filters.model.toLowerCase())) && filters.model !== "" && filters.model !== "all") {
+        if ((filters.model && !car.title?.toLowerCase().includes(filters.model.toLowerCase())) && filters.model !== "" && filters.model !== "all") {
           matches = false
         }
 
@@ -78,13 +79,13 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
         // Price range filter
         if (filters.priceRange && Array.isArray(filters.priceRange)) {
           // const carPrice = parseInt(car.price.replace(/[^\d]/g, ""))
-          if (car.price < filters.priceRange[0] || car.price > filters.priceRange[1]) {
+          if ((car.price ?? 0) < filters.priceRange[0] || (car.price ?? 0) > filters.priceRange[1]) {
             matches = false
           }
         }
 
         // Query filter (search in title)
-        if (filters.query && !car.title.toLowerCase().includes(filters.query.toLowerCase())) {
+        if (filters.query && !car.title?.toLowerCase().includes(filters.query.toLowerCase())) {
           matches = false
         }
 
@@ -110,15 +111,15 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
     if (sortBy === "latest") {
       filtered.sort((a, b) => b.year - a.year)
     } else if (sortBy === "price-low") {
-      filtered.sort((a, b) =>a.price - b.price)
+      filtered.sort((a, b) => (a.price ?? 0) - (b.price ?? 0))
     } else if (sortBy === "price-high") {
-      filtered.sort((a, b) => b.price - a.price)
+      filtered.sort((a, b) => (b.price ?? 0) - (a.price ?? 0))
     } else if (sortBy === "year-new") {
       filtered.sort((a, b) => b.year - a.year)
     } else if (sortBy === "mileage-low") {
-      filtered.sort((a, b) => a.mileage - b.mileage)
+      filtered.sort((a, b) => (a.mileage ?? 0) - (b.mileage ?? 0))
     } else if (sortBy === "mileage-high") {
-      filtered.sort((a, b) => b.mileage - a.mileage)
+      filtered.sort((a, b) => (b.mileage ?? 0) - (a.mileage ?? 0))
     }
 
 
@@ -158,8 +159,8 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
               <div className="flex flex-col md:flex-row">
                 <div className="relative md:w-80 h-48 md:h-auto overflow-hidden">
                   <Image
-                    src={car.images[0] || "/car.png"}
-                    alt={car.title}
+                    src={car.images?.[0] || "/white-car.png"}
+                    alt={car.title??""}
                     width={400}
                     height={250}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -177,7 +178,7 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
                   {/* Rating */}
                   <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center">
                     <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
-                    <span className="text-sm font-medium text-slate-700">{car.rating}</span>
+                    <span className="text-sm font-medium text-slate-700">4.9</span>
                   </div>
                 </div>
 
@@ -191,7 +192,7 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
                       </Link>
 
                       <div className="flex items-center gap-4 mb-4">
-                        <div className="text-3xl font-bold text-blue-600">{formatPrice(car.price)} PKR</div>
+                        <div className="text-3xl font-bold text-blue-600">{formatPrice(car.price??0)} PKR</div>
                         {car.originalPrice && (
                           <div className="text-lg text-slate-500 line-through">{formatPrice(car.originalPrice)} PKR</div>
                         )}
@@ -267,8 +268,8 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
           >
             <div className="relative overflow-hidden">
               <Image
-                src={car.images[0] || "/car.png"}
-                alt={car.title}
+                src={car.images?.[0] || "/car.png"}
+                alt={car.title??""}
                 width={400}
                 height={250}
                 className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
@@ -301,7 +302,7 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
               {/* Rating */}
               <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center">
                 <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
-                <span className="text-sm font-medium text-slate-700">{car.rating}</span>
+                <span className="text-sm font-medium text-slate-700">4.9</span>
               </div>
             </div>
 
@@ -314,7 +315,7 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
 
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <div className="text-2xl font-bold text-blue-600">{formatPrice(car.price)} PKR</div>
+                  <div className="text-2xl font-bold text-blue-600">{formatPrice(car.price??0)} PKR</div>
                   {car.originalPrice && <div className="text-sm text-slate-500 line-through">{formatPrice(car.originalPrice)} PKR</div>}
                 </div>
               </div>

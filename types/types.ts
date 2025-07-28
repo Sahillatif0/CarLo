@@ -1,0 +1,41 @@
+
+export type Car = {
+    id: string;
+    make: string;
+    model: string;
+    year: number;
+    color: string;
+    title?: string;
+    variant?: string;
+    price?: number;
+    originalPrice?: number;
+    mileage?: number;
+    transmission?: string;
+    fuelType?: string;
+    bodyType?: string;
+    engineSize?: string;
+    assembly?: string;
+    condition?: string;
+    features?: string[];
+    description?: string;
+    images?: string[];
+    city?: string;
+    address?: string;
+    registeredCity?: string;
+    badge?: string;
+    badgeColor?: string;
+    views?: number;
+    seating?: number;
+    sellerId?: string;
+    sold?: boolean;
+    featured?: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+};
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  address?: string;
+};

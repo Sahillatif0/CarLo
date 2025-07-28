@@ -9,9 +9,10 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Upload, X, CheckCircle, Car, ImageIcon, FileText, User } from "lucide-react"
-import { UploadDropzone, UploadButton } from "@uploadthing/react"
+import { X, CheckCircle, Car, ImageIcon, FileText, User } from "lucide-react"
+import { UploadDropzone } from "@uploadthing/react"
 import { OurFileRouter } from "@/app/api/uploadthing/core"
+import { Car as CarType, User as UserType } from "@/types/types"
 
 
 
@@ -36,20 +37,19 @@ const features = [
 
 export default function AddCarForm() {
   const [currentStep, setCurrentStep] = useState(1)
-  const [images, setImages] = useState<string[]>([])
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([])
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [progress, setProgress] = useState<number | null>(null)
-  const [carDetails, setCarDetails] = useState({
+  const [carDetails, setCarDetails] = useState<Partial<CarType>>({
     title: "",
     make: "",
     model: "",
-    year: "",
-    price: "",
-    originalPrice: "",
+    year: 2010,
+    price: 0,
+    originalPrice: 0,
     variant: "",
-    mileage: "",
+    mileage: 0,
     transmission: "",
     fuelType: "",
     bodyType: "",
@@ -58,7 +58,7 @@ export default function AddCarForm() {
     color: "",
     condition: "",
     features: [] as string[],
-    seating: "",
+    seating: 0,
     description: "",
     images: [] as string[],
     city: "",
@@ -67,17 +67,17 @@ export default function AddCarForm() {
     badge: "",
     badgeColor: ""
   })
-  const [sellerDetails, setSellerDetails] = useState({
+  const [sellerDetails, setSellerDetails] = useState<Partial<UserType>>({
     name: "",
     phone: "",
     email: "",
     address: ""
   })
 
-  const updateCarDetails = (key: string, value: string | string[]) => {
+  const updateCarDetails = (key: string, value: string | string[] | number) => {
     setCarDetails((prev) => ({ ...prev, [key]: value }))
     if (key === "address") {
-      setSellerDetails((prev) => ({ ...prev, [key]: typeof value === "string" ? value : value.join(", ") }))
+      setSellerDetails((prev) => ({ ...prev, [key]: typeof value === "string" ? value : Array.isArray(value) ? value.join(", ") : String(value) }))
     }
   }
 
@@ -86,12 +86,22 @@ export default function AddCarForm() {
   }
 
   const removeImage = (index: number) => {
-    setCarDetails((prev) => ({ ...prev, images: prev.images.filter((_, i) => i !== index) }) )
+    setCarDetails((prev) => ({ ...prev, images: prev.images?.filter((_, i) => i !== index) }) )
   }
 
   const handleFeatureToggle = (feature: string) => {
     setSelectedFeatures((prev) => (prev.includes(feature) ? prev.filter((f) => f !== feature) : [...prev, feature]))
     setCarDetails((prev) => ({ ...prev, features: selectedFeatures }))
+  }
+
+  interface ParseToInt {
+    (value: string | number | undefined): number
+  }
+
+  const parseToInt: ParseToInt = (value) => {
+    if (typeof value === "number") return value
+    const parsed = parseInt(value??"0")
+    return isNaN(parsed) ? 0 : parsed
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -105,7 +115,7 @@ export default function AddCarForm() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ carDetails:{...carDetails, year: parseInt(carDetails.year), price: parseFloat(carDetails.price), mileage: parseFloat(carDetails.mileage), originalPrice: parseFloat(carDetails.originalPrice), seating: parseInt(carDetails.seating) }, sellerDetails }),
+      body: JSON.stringify({ carDetails:{...carDetails, year: parseToInt(carDetails.year), price: parseToInt(carDetails.price), mileage: parseToInt(carDetails.mileage), originalPrice: parseToInt(carDetails.originalPrice), seating: parseToInt(carDetails.seating) }, sellerDetails }),
     }).then((res) => {
       console.log(res);
       if (!res.ok) {
@@ -135,7 +145,6 @@ export default function AddCarForm() {
             onClick={() => {
               setIsSubmitted(false)
               setCurrentStep(1)
-              setImages([])
               setSelectedFeatures([])
             }}
             className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
@@ -208,7 +217,7 @@ export default function AddCarForm() {
                 <Label htmlFor="year" className="text-sm font-medium text-slate-700 mb-2 block">
                   Year *
                 </Label>
-                <Select required value={carDetails.year} onValueChange={(value) => updateCarDetails("year", value)}>
+                <Select required value={carDetails.year?.toString()} onValueChange={(value) => updateCarDetails("year", value)}>
                   <SelectTrigger className="border-slate-300 focus:border-blue-500">
                     <SelectValue placeholder="Select year" />
                   </SelectTrigger>
@@ -506,7 +515,7 @@ export default function AddCarForm() {
                   if (!res) return;
                   const urls = res.map((f) => f.url);
                   // setImages((prev) => [...prev, ...urls.slice(0, 10 - prev.length)]); // Limit to 10 images
-                  setCarDetails((prev) => ({ ...prev, images: [...prev.images, ...urls.slice(0, 10 - prev.images.length)] }))
+                  setCarDetails((prev) => ({ ...prev, images: [...(prev.images || []), ...urls.slice(0, 10 - (prev.images?.length || 0))] }))
                 }}
                 onUploadError={(error) => {
                   console.error("Upload error:", error);
@@ -530,9 +539,9 @@ export default function AddCarForm() {
               )}
 
               {/* Image Preview */}
-              {carDetails.images.length > 0 && (
+              {(carDetails.images?.length ?? 0) > 0 && (
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-6">
-                  {carDetails.images.map((image, index) => (
+                  {(carDetails.images ?? []).map((image, index) => (
                     <div key={index} className="relative group">
                       <img
                         src={image || "/placeholder.svg"}

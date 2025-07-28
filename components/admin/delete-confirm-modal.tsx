@@ -13,7 +13,11 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { AlertTriangle, Trash2, X } from "lucide-react"
 
-export default function DeleteConfirmModal({ car, onClose, onConfirm }) {
+export default function DeleteConfirmModal({ car, onClose, onConfirm }: {
+  car: any,
+  onClose: () => void,
+  onConfirm: () => void
+}) {
   const [isDeleting, setIsDeleting] = useState(false)
 
   const handleDelete = async () => {

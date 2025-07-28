@@ -14,16 +14,22 @@ export default function FilterPanel({filters, setFilters}:{filters:any, setFilte
   const [isExpanded, setIsExpanded] = useState(true)
   const router = useRouter()
 
-  const updateFilter = (key: string, value: string | string[]) => {
-    setFilters((prev) => ({ ...prev, [key]: value }))
+  const updateFilter = (key: string, value: any) => {
+    setFilters((prev: any) => ({ ...prev, [key]: value }))
   }
 
   const handleSearch = () => {
     const params = new URLSearchParams()
 
     Object.entries(filters).forEach(([key, value]) => {
-      if (value) {
-        params.append(key, value)
+      if (value !== undefined && value !== null && value !== "") {
+        if (Array.isArray(value)) {
+          value.forEach((v) => params.append(key, String(v)))
+        } else if (typeof value === "object") {
+          params.append(key, JSON.stringify(value))
+        } else {
+          params.append(key, String(value))
+        }
       }
     })
 

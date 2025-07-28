@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {Car as CarType, User as UserType} from "@/types/types"
 
 import { UploadDropzone } from "@uploadthing/react"
 import { OurFileRouter } from "@/app/api/uploadthing/core"
@@ -81,9 +82,9 @@ const availableFeatures = [
   "Parking Sensors",
 ]
 
-export default function CarEditModal({ car, onClose, onSave }) {
+export default function CarEditModal({ car, onClose, onSave }: { car: CarType; onClose: () => void; onSave: (car: CarType) => void }) {
   const [progress, setProgress] = useState<number | null>(null)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Partial<CarType>>({
     // Basic Information
     title: car.title || "",
     make: car.make || "",
@@ -110,7 +111,6 @@ export default function CarEditModal({ car, onClose, onSave }) {
     // Additional Details
     description: car.description || "",
     features: car.features || [],
-    status: car.status || "active",
     featured: car.featured || false,
     sold: car.sold || false,
 
@@ -119,12 +119,7 @@ export default function CarEditModal({ car, onClose, onSave }) {
   const [isLoading, setIsLoading] = useState(false)
   const [images, setImages] = useState(car.images || [])
   const [activeTab, setActiveTab] = useState("basic")
-  const [seller, setSeller] = useState({
-    name: car.seller?.name || "",
-    email: car.seller?.email || "",
-    phone: car.seller?.phone || "",
-    address: car.seller?.address || "",
-  })
+  const [seller, setSeller] = useState<UserType | null>(null)
 
 
   useEffect(()=>{
@@ -146,29 +141,29 @@ export default function CarEditModal({ car, onClose, onSave }) {
 
   },[])
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: keyof CarType, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleInputChangeSeller = (field, value) => {
-    setSeller((prev) => ({ ...prev, [field]: value }))
+  const handleInputChangeSeller = (field: keyof UserType, value: any) => {
+    setSeller((prev) => prev ? { ...prev, [field]: value } : prev)
   }
 
-  const handleFeatureToggle = (feature) => {
+  const handleFeatureToggle = (feature: string) => {
     setFormData((prev) => ({
       ...prev,
-      features: prev.features.includes(feature)
+      features: prev.features?.includes(feature)
         ? prev.features.filter((f) => f !== feature)
-        : [...prev.features, feature],
+        : [...prev.features ?? [], feature],
     }))
   }
 
 
-  const removeImage = (index) => {
+  const removeImage = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index))
   }
 
-  const moveImage = (fromIndex, toIndex) => {
+  const moveImage = (fromIndex: number, toIndex: number) => {
     setImages((prev) => {
       const newImages = [...prev]
       const [movedImage] = newImages.splice(fromIndex, 1)
@@ -177,7 +172,7 @@ export default function CarEditModal({ car, onClose, onSave }) {
     })
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault()
     setIsLoading(true)
 
@@ -203,7 +198,7 @@ export default function CarEditModal({ car, onClose, onSave }) {
     setIsLoading(false)
   }
 
-  const currentStatus = statusOptions.find((s) => s.value === formData.status)
+  const currentStatus = statusOptions.find((s) => s.value === (formData.sold ? "sold" : "active")) || statusOptions[0]
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
@@ -226,12 +221,11 @@ export default function CarEditModal({ car, onClose, onSave }) {
                     Featured
                   </Badge>
                 )}
-                {formData.verified && (
+                
                   <Badge className="bg-green-100 text-green-800 border-0 px-3 py-1">
                     <Shield className="w-3 h-3 mr-1" />
                     Verified
                   </Badge>
-                )}
               </div>
             </div>
           </DialogHeader>
@@ -297,8 +291,7 @@ export default function CarEditModal({ car, onClose, onSave }) {
                               Listing Status *
                             </Label>
                             <Select
-                              value={formData.status}
-                              onValueChange={(value) => handleInputChange("status", value)}
+                              value={formData.sold ? "sold" : "active"}
                             >
                               <SelectTrigger className="mt-1">
                                 <SelectValue />
@@ -359,7 +352,7 @@ export default function CarEditModal({ car, onClose, onSave }) {
                               Year *
                             </Label>
                             <Select
-                              value={formData.year.toString()}
+                              value={formData.year?.toString()}
                               onValueChange={(value) => handleInputChange("year", Number.parseInt(value))}
                             >
                               <SelectTrigger className="mt-1">
@@ -596,7 +589,7 @@ export default function CarEditModal({ car, onClose, onSave }) {
                               Seating Capacity
                             </Label>
                             <Select
-                              value={formData.seating.toString()}
+                              value={formData.seating?.toString()}
                               onValueChange={(value) => handleInputChange("seating", Number.parseInt(value))}
                             >
                               <SelectTrigger className="mt-1">
@@ -622,7 +615,7 @@ export default function CarEditModal({ car, onClose, onSave }) {
                               <div key={feature} className="flex items-center space-x-2">
                                 <Checkbox
                                   id={feature}
-                                  checked={formData.features.includes(feature)}
+                                  checked={formData.features?.includes(feature)}
                                   onCheckedChange={() => handleFeatureToggle(feature)}
                                 />
                                 <Label htmlFor={feature} className="text-sm">
@@ -653,7 +646,7 @@ export default function CarEditModal({ car, onClose, onSave }) {
                             </Label>
                             <Input
                               id="seller"
-                              value={seller.name}
+                              value={seller?.name}
                               onChange={(e) => handleInputChangeSeller("name", e.target.value)}
                               className="mt-1"
                               required
@@ -662,11 +655,11 @@ export default function CarEditModal({ car, onClose, onSave }) {
 
                           <div>
                             <Label htmlFor="location" className="text-sm font-medium">
-                              Location *
+                              Location <sup className="text-red-500">*</sup>
                             </Label>
                             <Input
                               id="location"
-                              value={seller.address}
+                              value={seller?.address}
                               onChange={(e) => handleInputChangeSeller("address", e.target.value)}
                               placeholder="e.g., Karachi, Lahore, Islamabad"
                               className="mt-1"
@@ -682,7 +675,7 @@ export default function CarEditModal({ car, onClose, onSave }) {
                               <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                               <Input
                                 id="phone"
-                                value={seller.phone}
+                                value={seller?.phone}
                                 onChange={(e) => handleInputChangeSeller("phone", e.target.value)}
                                 className="pl-10"
                                 placeholder="+92 300 1234567"
@@ -699,8 +692,8 @@ export default function CarEditModal({ car, onClose, onSave }) {
                               <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                               <Input
                                 id="whatsapp"
-                                value={seller.whatsapp}
-                                onChange={(e) => handleInputChangeSeller("whatsapp", e.target.value)}
+                                value={seller?.phone}
+                                onChange={(e) => handleInputChangeSeller("phone", e.target.value)}
                                 className="pl-10"
                                 placeholder="+92 300 1234567"
                               />
@@ -716,7 +709,7 @@ export default function CarEditModal({ car, onClose, onSave }) {
                               <Input
                                 id="email"
                                 type="email"
-                                value={seller.email}
+                                value={seller?.email}
                                 onChange={(e) => handleInputChangeSeller("email", e.target.value)}
                                 className="pl-10"
                                 placeholder="seller@example.com"

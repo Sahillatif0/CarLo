@@ -10,92 +10,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Search, Edit, Trash2, Eye, Filter, Car, Users, TrendingUp, AlertCircle, Plus } from "lucide-react"
 import CarEditModal from "./car-edit-modal"
 import DeleteConfirmModal from "./delete-confirm-modal"
-
-// Mock data for cars
-const mockCars = [
-  {
-    id: "1",
-    title: "Toyota Corolla GLi 2020",
-    make: "Toyota",
-    model: "Corolla",
-    year: 2020,
-    price: 3250000,
-    mileage: 45000,
-    location: "Karachi",
-    status: "active",
-    seller: "Ahmed Khan",
-    phone: "0300-1234567",
-    images: ["/placeholder.svg?height=100&width=150"],
-    createdAt: "2024-01-15",
-  },
-  {
-    id: "2",
-    title: "Honda Civic Turbo 2019",
-    make: "Honda",
-    model: "Civic",
-    year: 2019,
-    price: 4500000,
-    mileage: 32000,
-    location: "Lahore",
-    status: "pending",
-    seller: "Sara Ali",
-    phone: "0321-9876543",
-    images: ["/placeholder.svg?height=100&width=150"],
-    createdAt: "2024-01-14",
-  },
-  {
-    id: "3",
-    title: "Suzuki Alto VXR 2021",
-    make: "Suzuki",
-    model: "Alto",
-    year: 2021,
-    price: 1850000,
-    mileage: 25000,
-    location: "Islamabad",
-    status: "sold",
-    seller: "Muhammad Hassan",
-    phone: "0333-5555555",
-    images: ["/placeholder.svg?height=100&width=150"],
-    createdAt: "2024-01-13",
-  },
-  {
-    id: "4",
-    title: "BMW 3 Series 2018",
-    make: "BMW",
-    model: "3 Series",
-    year: 2018,
-    price: 7200000,
-    mileage: 55000,
-    location: "Karachi",
-    status: "active",
-    seller: "Ali Raza",
-    phone: "0300-7777777",
-    images: ["/placeholder.svg?height=100&width=150"],
-    createdAt: "2024-01-12",
-  },
-  {
-    id: "5",
-    title: "Hyundai Elantra 2020",
-    make: "Hyundai",
-    model: "Elantra",
-    year: 2020,
-    price: 3800000,
-    mileage: 38000,
-    location: "Lahore",
-    status: "inactive",
-    seller: "Fatima Sheikh",
-    phone: "0321-4444444",
-    images: ["/placeholder.svg?height=100&width=150"],
-    createdAt: "2024-01-11",
-  },
-]
+import { Car as CarType} from "@/types/types"
 
 export default function AdminDashboard() {
-  const [cars, setCars] = useState(mockCars)
+  const [cars, setCars] = useState<CarType[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
-  const [editingCar, setEditingCar] = useState(null)
-  const [deletingCar, setDeleteingCar] = useState(null)
+  const [editingCar, setEditingCar] = useState<CarType | null>(null)
+  const [deletingCar, setDeletingCar] = useState<CarType | null>(null)
 
 
 
@@ -106,10 +28,10 @@ export default function AdminDashboard() {
         const response = await fetch("/api/cars")
         if (!response.ok) throw new Error("Failed to fetch cars")
         const data = await response.json()
-        setCars(data.cars || mockCars) // Fallback to mock data if API fails
+        setCars(data.cars || []) // Fallback to empty array if API fails
       } catch (error) {
         console.error("Error fetching cars:", error)
-        setCars(mockCars) // Use mock data on error
+        setCars([]) // Use empty array on error
       }
     }
 
@@ -119,10 +41,10 @@ export default function AdminDashboard() {
   // Filter cars based on search and status
   const filteredCars = cars.filter((car) => {
     const matchesSearch =
-      car.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      car.make.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      car.seller.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = statusFilter === "all" || car.status === statusFilter
+      car.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      car.make?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      car.model?.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesStatus = statusFilter === "all" || car.sold === (statusFilter === "sold")
     return matchesSearch && matchesStatus
   })
 
@@ -143,11 +65,10 @@ export default function AdminDashboard() {
         console.error("Error deleting car:", error)
       })
     setCars(cars.filter((car) => car.id !== carId))
-    setDeleteingCar(null)
+    setDeletingCar(null)
   }
 
-  const handleUpdateCar = (updatedCar) => {
-    console.log("gied fjfd f j", updatedCar)
+  const handleUpdateCar = (updatedCar: CarType) => {
     // Call API to update car
     fetch(`/api/car/${updatedCar.id}`, {
       method: "PUT",
@@ -169,18 +90,18 @@ export default function AdminDashboard() {
     setEditingCar(null)
   }
 
-  const getStatusBadge = (status) => {
+  const getStatusBadge = (status: string) => {
     const statusConfig = {
       active: { color: "bg-green-100 text-green-800", label: "Active" },
       pending: { color: "bg-yellow-100 text-yellow-800", label: "Pending" },
       sold: { color: "bg-blue-100 text-blue-800", label: "Sold" },
       inactive: { color: "bg-gray-100 text-gray-800", label: "Inactive" },
     }
-    const config = statusConfig[status] || statusConfig.inactive
+    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.inactive
     return <Badge className={`${config.color} border-0`}>{config.label}</Badge>
   }
 
-  const formatPrice = (price) => {
+  const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-PK", {
       style: "currency",
       currency: "PKR",
@@ -192,9 +113,9 @@ export default function AdminDashboard() {
   // Stats calculation
   const stats = {
     total: cars.length,
-    active: cars.filter((car) => car.status === "active").length,
-    pending: cars.filter((car) => car.status === "pending").length,
-    sold: cars.filter((car) => car.status === "sold").length,
+    // active: cars.filter((car) => car.status === "active").length,
+    // pending: cars.filter((car) => car.status === "pending").length,
+    sold: cars.filter((car) => car.sold === true).length,
   }
 
   return (
@@ -218,7 +139,7 @@ export default function AdminDashboard() {
             <TrendingUp className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{stats.active}</div>
+            <div className="text-2xl font-bold text-green-600">{0}</div>
             <p className="text-xs text-muted-foreground">Currently live</p>
           </CardContent>
         </Card>
@@ -229,7 +150,7 @@ export default function AdminDashboard() {
             <AlertCircle className="h-4 w-4 text-yellow-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
+            <div className="text-2xl font-bold text-yellow-600">{0}</div>
             <p className="text-xs text-muted-foreground">Awaiting approval</p>
           </CardContent>
         </Card>
@@ -308,7 +229,7 @@ export default function AdminDashboard() {
                     <TableRow key={car.id}>
                       <TableCell>
                         <img
-                          src={car.images[0] || "/placeholder.svg?height=60&width=80"}
+                          src={car.images?.[0] || "/white-car.png"}
                           alt={car.title}
                           className="w-16 h-12 object-cover rounded-md"
                         />
@@ -317,20 +238,20 @@ export default function AdminDashboard() {
                         <div>
                           <p className="font-medium text-sm">{car.title}</p>
                           <p className="text-xs text-gray-500">
-                            {car.year} • {car.mileage.toLocaleString()} km • {car.location}
+                            {car.year} • {car.mileage?.toLocaleString()} km • {car.city}
                           </p>
                         </div>
                       </TableCell>
-                      <TableCell className="font-medium">{formatPrice(car.price)}</TableCell>
+                      <TableCell className="font-medium">{formatPrice(car.price ?? 0)}</TableCell>
                       <TableCell>
                         <div>
-                          <p className="text-sm font-medium">{car.seller}</p>
-                          <p className="text-xs text-gray-500">{car.phone}</p>
+                          <p className="text-sm font-medium">CarLo</p>
+                          <p className="text-xs text-gray-500">{process.env.NEXT_PUBLIC_PHONE}</p>
                         </div>
                       </TableCell>
-                      <TableCell>{getStatusBadge(car.status)}</TableCell>
+                      <TableCell>{getStatusBadge(car.sold ? "sold" : "active")}</TableCell>
                       <TableCell className="text-sm text-gray-500">
-                        {new Date(car.createdAt).toLocaleDateString()}
+                        {new Date(car.createdAt ?? "").toLocaleDateString()}
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end space-x-2">
@@ -343,7 +264,7 @@ export default function AdminDashboard() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => setDeleteingCar(car)}
+                            onClick={() => setDeletingCar(car)}
                             className="text-red-600 hover:text-red-700"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -364,7 +285,7 @@ export default function AdminDashboard() {
                     {/* Car Image */}
                     <div className="flex-shrink-0">
                       <img
-                        src={car.images[0] || "/placeholder.svg?height=60&width=80"}
+                        src={car.images?.[0] || "/white-car.png"}
                         alt={car.title}
                         className="w-20 h-16 object-cover rounded-md"
                       />
@@ -376,34 +297,34 @@ export default function AdminDashboard() {
                         <div className="flex-1 min-w-0">
                           <h3 className="font-medium text-sm text-gray-900 truncate">{car.title}</h3>
                           <p className="text-xs text-gray-500 mt-1">
-                            {car.year} • {car.mileage.toLocaleString()} km
+                            {car.year} • {car.mileage?.toLocaleString()} km
                           </p>
                         </div>
                         <div className="ml-2 flex-shrink-0">
-                          {getStatusBadge(car.status)}
-                        </div>
+                          {getStatusBadge(car.sold ? "sold" : "active")}
+                        </div>  
                       </div>
                       
                       {/* Price and Location */}
                       <div className="flex items-center justify-between mb-3">
                         <div className="font-semibold text-lg text-blue-600">
-                          {formatPrice(car.price)}
+                          {formatPrice(car.price ?? 0)}
                         </div>
                         <div className="text-xs text-gray-500">
-                          {car.location}
+                          {car.city}
                         </div>
                       </div>
                       
                       {/* Seller Info */}
                       <div className="mb-3">
-                        <p className="text-sm font-medium text-gray-900">{car.seller}</p>
-                        <p className="text-xs text-gray-500">{car.phone}</p>
+                        <p className="text-sm font-medium text-gray-900">CarLo</p>
+                        <p className="text-xs text-gray-500">{process.env.NEXT_PUBLIC_PHONE}</p>
                       </div>
                       
                       {/* Date and Actions */}
                       <div className="flex items-center justify-between">
                         <div className="text-xs text-gray-500">
-                          {new Date(car.createdAt).toLocaleDateString()}
+                          {new Date(car.createdAt ?? "").toLocaleDateString()}
                         </div>
                         <div className="flex items-center space-x-1">
                           <Button 
@@ -425,7 +346,7 @@ export default function AdminDashboard() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => setDeleteingCar(car)}
+                            onClick={() => setDeletingCar(car)}
                             className="p-2 text-red-600 hover:text-red-700"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -459,7 +380,7 @@ export default function AdminDashboard() {
       {deletingCar && (
         <DeleteConfirmModal
           car={deletingCar}
-          onClose={() => setDeleteingCar(null)}
+          onClose={() => setDeletingCar(null)}
           onConfirm={() => handleDeleteCar(deletingCar.id)}
         />
       )}

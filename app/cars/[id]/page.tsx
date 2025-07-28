@@ -4,13 +4,14 @@ import CarSpecs from "@/components/car-specs"
 import ContactSection from "@/components/contact-section"
 import RelatedCars from "@/components/related-cars"
 import { useEffect, useState } from "react"
-import { SkeletonCard, SkeletonGrid } from "@/components/skeleton-card"
+import { SkeletonCard } from "@/components/skeleton-card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Car, User } from "@/types/types"
 
 export default function CarDetailPage({ params }: { params: { id: string } }) {
-  const [carDetails, setCarDetails] = useState<any>({})
-  const [seller, setSeller] = useState<any>({})
-  const [relatedCars, setRelatedCars] = useState<any[]>([])
+  const [carDetails, setCarDetails] = useState<Car | null>(null)
+  const [seller, setSeller] = useState<User | null>(null)
+  const [relatedCars, setRelatedCars] = useState<Car[]>([])
   const [isDataLoading, setIsDataLoading] = useState(true)
   
   useEffect(() => {
@@ -63,7 +64,7 @@ export default function CarDetailPage({ params }: { params: { id: string } }) {
         <div className="grid lg:grid-cols-3 gap-8 mb-16">
           <div className="lg:col-span-2 space-y-8">
             <div className="animate-slide-up">
-              <ImageCarousel images={carDetails.images} />
+              <ImageCarousel images={carDetails?.images ? carDetails.images : []} />
             </div>
             <div className="animate-slide-up animation-delay-200">
               <CarSpecs carDetails={carDetails} />
