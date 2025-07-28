@@ -5,6 +5,7 @@ export async function POST(req: Request) {
     return Response.json({ error: "Password is required" }, { status: 400 });
   }
   const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
+  console.log("Admin Password:", ADMIN_PASSWORD);
   if (password !== ADMIN_PASSWORD) {
     return Response.json({ error: "Invalid password" }, { status: 401 });
   }
