@@ -1,26 +1,20 @@
-// import { createRouteHandler } from "uploadthing/next";
-// import { ourFileRouter } from "./core";
-    
-// const handler = createRouteHandler({
-//   router: ourFileRouter,
-// });
-
-// export { handler as GET, handler as POST };
-// app/api/uploadthing/route.ts
-// import { createRouteHandler } from "uploadthing/server";
-// import { ourFileRouter } from "./core"; // adjust path as necessary
-
-// export const { GET, POST } = createRouteHandler({
-//   router: ourFileRouter,
-// });
 import { createRouteHandler } from "uploadthing/next";
-
 import { ourFileRouter } from "./core";
+import { UTApi } from "uploadthing/server";
 
-// Export routes for Next App Router
+const utapi = new UTApi();
+
 export const { GET, POST } = createRouteHandler({
   router: ourFileRouter,
-
-  // Apply an (optional) custom config:
-  // config: { ... },
 });
+
+export async function deleteImages(fileKeys: string[]) {
+  try {
+    await utapi.deleteFiles(fileKeys); 
+    console.log("Files deleted successfully:", fileKeys);
+    return { success: true };
+  } catch (error) {
+    console.error("Delete error:", error);
+    return { success: false };
+  }
+}

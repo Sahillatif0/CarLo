@@ -1,5 +1,6 @@
 
 import { prisma } from "@/lib/prisma"; 
+import { deleteImages } from "../../uploadthing/route";
 
 export async function GET(req: Request) {
   const id = req.url.split("/").pop();
@@ -81,6 +82,12 @@ export async function DELETE(req: Request) {
       },
     });
 
+    const imgkeys = car.images.map((img) => img.split("/").pop()) || [];
+    console.log("Deleting images with keys:", imgkeys);
+    if (imgkeys.length > 0) {
+      await deleteImages(imgkeys);
+    }
+    
     return Response.json({ message: "Car deleted successfully", car });
   } catch (error) {
     return Response.json({ message: "Internal server error", error });
