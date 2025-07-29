@@ -52,10 +52,7 @@ export default function AdminDashboard() {
   const handleDeleteCar = (carId: string) => {
     // Call API to delete car
     fetch(`/api/car/${carId}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ password: process.env.NEXT_PUBLIC_ADMIN_PASSWORD }),
+      method: "DELETE"
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to delete car")
@@ -77,7 +74,7 @@ export default function AdminDashboard() {
       method: "PUT",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({carDetails: updatedCar, password: process.env.NEXT_PUBLIC_ADMIN_PASSWORD}),
+      body: JSON.stringify({carDetails: updatedCar}),
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to update car")
