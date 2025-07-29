@@ -7,7 +7,8 @@ export async function GET() {
       where: {
         OR: [
           { badge: "featured" },
-          { badge: "Featured" }
+          { badge: "Featured" },
+          { featured: true },
         ]
       }
     });
