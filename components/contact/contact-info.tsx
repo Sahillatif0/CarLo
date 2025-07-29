@@ -1,3 +1,4 @@
+"use client"
 import { MapPin, Phone, Mail, Clock, MessageCircle, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -5,26 +6,29 @@ const contactMethods = [
   {
     icon: Phone,
     title: "Phone",
-    details: ["+92 300 1234567", "+92 21 1234567"],
+    details: ["+92 302 3136195", "+92 304 8105667"],
     action: "Call Now",
     color: "text-green-600",
     bgColor: "bg-green-100",
+    function: () => window.location.href = `tel:${process.env.NEXT_PUBLIC_TEL}`,
   },
   {
     icon: MessageCircle,
     title: "WhatsApp",
-    details: ["+92 300 1234567"],
+    details: ["+92 302 3136195"],
     action: "Chat Now",
     color: "text-green-600",
     bgColor: "bg-green-100",
+    function: () => window.location.href = `https://wa.me/${process.env.NEXT_PUBLIC_TEL}`,
   },
   {
     icon: Mail,
     title: "Email",
-    details: ["info@eliteauto.pk", "support@eliteauto.pk"],
+    details: [process.env.NEXT_PUBLIC_EMAIL, "support@ahmedsecarlo.pk"],
     action: "Send Email",
     color: "text-blue-600",
     bgColor: "bg-blue-100",
+    function: () => window.location.href = `mailto:${process.env.NEXT_PUBLIC_EMAIL}`,
   },
 ]
 
@@ -77,6 +81,7 @@ export default function ContactInfo() {
                 <Button
                   size="sm"
                   className="mt-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                  onClick={method.function}
                 >
                   {method.action}
                 </Button>

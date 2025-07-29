@@ -129,9 +129,9 @@ export default function ContactForm() {
                   <div>
                     <h4 className="font-semibold text-slate-900 mb-1">Phone</h4>
                     <p className="text-slate-600">
-                      +92 300 1234567
+                      +92 302 3136195
                       <br />
-                      +92 21 1234567
+                      +92 304 8105667
                     </p>
                   </div>
                 </div>
@@ -143,7 +143,7 @@ export default function ContactForm() {
                   <div>
                     <h4 className="font-semibold text-slate-900 mb-1">Email</h4>
                     <p className="text-slate-600">
-                      info@AhmedSeCarLo.pk
+                      {process.env.NEXT_PUBLIC_EMAIL || "support"}
                       <br />
                       support@AhmedSeCarLo.pk
                     </p>
