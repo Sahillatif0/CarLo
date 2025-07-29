@@ -13,26 +13,48 @@ export default function CarDetailPage({ params }: { params: { id: string } }) {
   const [seller, setSeller] = useState<User | null>(null)
   const [relatedCars, setRelatedCars] = useState<Car[]>([])
   const [isDataLoading, setIsDataLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   
   useEffect(() => {
-      const fetchData = async () => {
-        setIsDataLoading(true)
-      fetch("/api/car/"+params.id)
-        .then(res => res.json())
-        .then(data => {
-          console.log("Fetched Car details:", data)
-          setCarDetails(data.car)
-          setSeller(data.seller)
-          setRelatedCars(data.relatedCars)
-          setIsDataLoading(false)
-        })
-        .catch(err => {
-          console.error("Error fetching cars:", err)
-          fetchData()
-        })
+    const fetchData = async () => {
+      setIsDataLoading(true)
+      setError(null)
+      try {
+        const res = await fetch("/api/car/" + params.id)
+        if (!res.ok) {
+          throw new Error(`Failed to fetch car details: ${res.status}`)
+        }
+        const data = await res.json()
+        console.log("Fetched Car details:", data)
+        setCarDetails(data.car)
+        setSeller(data.seller)
+        setRelatedCars(data.relatedCars)
+      } catch (err) {
+        console.error("Error fetching cars:", err)
+        setError(err instanceof Error ? err.message : "Failed to load car details")
+      } finally {
+        setIsDataLoading(false)
+      }
     }
     fetchData()
-  }, [])
+  }, [params.id])
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-blue-600 text-white px-4 py-2 rounded"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    )
+  }
   if (isDataLoading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">

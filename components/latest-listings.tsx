@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { MapPin, Calendar, Gauge, ChevronLeft, ChevronRight } from "lucide-react"
+import { MapPin, Calendar, Gauge, ChevronLeft, ChevronRight, Eye } from "lucide-react"
 import { formatPrice } from "@/lib/common-functions"
 
 const latestCarss = [
@@ -173,7 +173,14 @@ export default function LatestListings() {
                 {((new Date(car.createdAt).getTime() + 7 * 24 * 3600) > new Date().getTime()) && (
                   <Badge className="absolute top-3 left-3 bg-green-500 hover:bg-green-600">New Arrival</Badge>
                 )}
+
+                  <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-sm rounded-full px-3 py-1 flex items-center">
+                    <Eye className="w-3 h-3 text-white mr-1" />
+                    <span className="text-xs text-white">{car.views}</span>
                 </div>
+                
+                </div>
+
 
                 <div className="p-5">
                 <Link href={`/cars/${car.id}`}>

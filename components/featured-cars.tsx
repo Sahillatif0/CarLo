@@ -3,7 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { MapPin, Calendar, Gauge, Heart, Star } from "lucide-react"
+import { MapPin, Calendar, Gauge, Heart, Star, Eye } from "lucide-react"
 import { useEffect, useState } from "react"
 import { formatPrice } from "@/lib/common-functions"
 
@@ -107,10 +107,9 @@ export default function FeaturedCars() {
                   <Heart className="w-4 h-4 text-slate-600 hover:text-red-500" />
                 </Button>
 
-                {/* Rating */}
-                <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center">
-                  <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
-                  <span className="text-sm font-medium text-slate-700">{car.rating}</span>
+                <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-sm rounded-full px-3 py-1 flex items-center">
+                  <Eye className="w-3 h-3 text-white mr-1" />
+                  <span className="text-xs text-white">{car.views}</span>
                 </div>
               </div>
 

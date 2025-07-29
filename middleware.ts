@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import jwt from 'jsonwebtoken';
 
 const protectedPaths = ['/admin', '/api/car', '/add-car'];
 
@@ -62,5 +61,5 @@ export function middleware(request: NextRequest) {
 
 // Update matcher to exclude login page
 export const config = {
-  matcher: ['/admin/:path*', '/api/admin/:path*', '/api/car/:path*', '/add-car', '/cars'],
+  matcher: ['/admin/:path*', '/api/admin/:path*', '/api/car/:path*', '/add-car'],
 }

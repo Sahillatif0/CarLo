@@ -18,6 +18,13 @@ export async function GET(req: Request) {
       return Response.json({ message: "Car not found" });
     }
 
+    await prisma.car.update({
+      where: { id: currentCar.id },
+      data: {
+        views: (currentCar.views || 0) + 1,
+      },
+    });
+
     const seller = await prisma.user.findUnique({
       where: { id: currentCar.sellerId },
     });
