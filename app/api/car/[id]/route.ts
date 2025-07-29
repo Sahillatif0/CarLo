@@ -82,7 +82,7 @@ export async function DELETE(req: Request) {
       },
     });
 
-    const imgkeys = car.images.map((img) => img.split("/").pop()) || [];
+    const imgkeys = (car.images.map((img) => img.split("/").pop()).filter((key): key is string => typeof key === "string")) || [];
     console.log("Deleting images with keys:", imgkeys);
     if (imgkeys.length > 0) {
       await deleteImages(imgkeys);
