@@ -5,10 +5,9 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { MapPin, Calendar, Gauge, Heart, Star, Eye, Phone, MessageCircle } from "lucide-react"
 import { useState, useEffect } from "react"
-import { SkeletonCard, SkeletonGrid } from "./skeleton-card"
+import { SkeletonGrid } from "./skeleton-card"
 import { formatPrice } from "@/lib/common-functions"
 import { Car } from "@/types/types"
-import { Skeleton } from "./ui/skeleton"
 
 interface CarGridProps {
   viewMode?: "grid" | "list"
@@ -86,6 +85,17 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
         }
 
         // Query filter (search in title)
+        for(const key in car) {
+          let value = car[key as keyof Car]
+          if (filters.query && value != null) {
+            const valueStr = typeof value === "string" ? value : String(value)
+            if (!valueStr.toLowerCase().includes(filters.query.toLowerCase())) {
+              matches = true
+              break
+            }
+          }
+        }
+
         if (filters.query && !car.title?.toLowerCase().includes(filters.query.toLowerCase())) {
           matches = false
         }
