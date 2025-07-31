@@ -4,13 +4,14 @@ import Link from "next/link"
 import { useState, useEffect } from "react"
 import { ChevronDown, Car, Phone, Plus, Home, Info, MessageCircle, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isBlueBg, setIsBlueBg] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
 
 
   useEffect(() => {
@@ -39,12 +40,7 @@ export default function Navbar() {
   }, [isMobileMenuOpen])
 
   const handleContactClick = () => {
-    window.location.href = "/contact"
-  }
-
-  const handleTestDriveClick = () => {
-    // window.location.href = "/book-test-drive"
-    console.log("Trigering")
+    router.push("/contact")
   }
 
   const closeMobileMenu = () => {
@@ -129,8 +125,12 @@ export default function Navbar() {
             <Button
               size="sm"
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+              asChild
             >
-              Book Test Drive
+              <Link href="/cars">
+                <Search className="w-4 h-4 mr-2" />
+                Browse Cars
+              </Link>
             </Button>
           </div>
 
@@ -264,11 +264,12 @@ export default function Navbar() {
                 size="lg"
                 className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 h-12"
                 onClick={() => {
-                  handleTestDriveClick()
-                  closeMobileMenu()
+                  router.push("/cars");
+                  closeMobileMenu();
                 }}
               >
-                Book Test Drive
+                <Search className="w-4 h-4 mr-3" />
+                Browse Cars
               </Button>
             </div>
           </div>

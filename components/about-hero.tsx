@@ -1,8 +1,15 @@
+"use client"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Award, Users, Car } from "lucide-react"
+import { ArrowRight, Shield, Star, Zap} from "lucide-react"
 import Image from "next/image"
 
 export default function AboutHero() {
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
   return (
     <section className="pt-40 pb-16 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 relative overflow-hidden">
       {/* Background Animation */}
@@ -38,31 +45,26 @@ export default function AboutHero() {
             </div>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <Car className="w-6 h-6 text-white" />
-                </div>
-                <div className="text-2xl font-bold text-white">500+</div>
-                <div className="text-slate-400 text-sm">Premium Cars</div>
+            <div className="hidden md:grid grid-cols-2 justify-center md:grid-cols-3 gap-6 max-w-4xl mx-auto ">
+            {[
+              { icon: Shield, title: "Quality Assured", desc: "Thoroughly inspected vehicles" },
+              { icon: Star, title: "Professional Service", desc: "Expert guidance & support" },
+              { icon: Zap, title: "Quick Response", desc: "Fast & efficient service" },
+            ].map((item, index) => (
+              <div
+                key={index}
+                className={`bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/20 text-center transition-all duration-300 ${
+                  isVisible ? "animate-slide-up" : ""
+                }`}
+                style={{ animationDelay: `${800 + index * 200}ms` }}
+              >
+                <item.icon className="w-8 h-8 text-blue-400 mx-auto mb-3" />
+                <h3 className="text-white font-semibold mb-2">{item.title}</h3>
+                <p className="text-blue-200 text-sm">{item.desc}</p>
               </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <Users className="w-6 h-6 text-white" />
-                </div>
-                <div className="text-2xl font-bold text-white">10K+</div>
-                <div className="text-slate-400 text-sm">Happy Customers</div>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <Award className="w-6 h-6 text-white" />
-                </div>
-                <div className="text-2xl font-bold text-white">5</div>
-                <div className="text-slate-400 text-sm">Years Experience</div>
-              </div>
+            ))}
             </div>
           </div>
-
           <div className="relative animate-slide-up animation-delay-400">
             <Image
               src="/white-car.png?height=600&width=500"

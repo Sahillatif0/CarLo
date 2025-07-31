@@ -5,34 +5,29 @@ import { ChevronDown, ChevronUp } from "lucide-react"
 
 const faqs = [
   {
-    question: "How do I schedule a test drive?",
+    question: "How do I buy a car on your website?",
     answer:
-      "You can schedule a test drive by calling us directly, using our WhatsApp service, or filling out the contact form. Our team will coordinate with the dealer to arrange a convenient time for you.",
+      "You can browse our selection of cars, view detailed information for each vehicle, and contact us directly to proceed with your purchase. Our team will guide you through the buying process.",
+  },
+  {
+    question: "Can I view car details before contacting you?",
+    answer:
+      "Yes, you can view comprehensive details and photos for each car listed on our website before reaching out to us.",
   },
   {
     question: "Are all cars on your platform verified?",
     answer:
-      "Yes, all vehicles listed on EliteAuto are thoroughly inspected and verified. We work only with trusted dealers who meet our strict quality standards.",
+      "Yes, all vehicles listed on our platform are thoroughly inspected and verified. We ensure that every car meets our quality standards.",
   },
   {
     question: "Do you offer financing options?",
     answer:
-      "We partner with leading banks and financial institutions to offer competitive financing options. Our team can help you find the best financing solution that fits your budget.",
+      "Currently, we do not offer financing options. All purchases are made directly through our platform.",
   },
   {
-    question: "What is your return policy?",
+    question: "How do I contact you about a car?",
     answer:
-      "We offer a 7-day return policy for vehicles purchased through our platform, subject to terms and conditions. The vehicle must be returned in the same condition as purchased.",
-  },
-  {
-    question: "How do I know if a car is still available?",
-    answer:
-      "All listings are updated in real-time. If you see a car listed, it's available. However, we recommend contacting the dealer quickly as premium cars sell fast.",
-  },
-  {
-    question: "Do you provide vehicle history reports?",
-    answer:
-      "Yes, we provide comprehensive vehicle history reports for all cars listed on our platform. This includes accident history, service records, and ownership details.",
+      "You can contact us using the details provided on our website. We are available via phone, WhatsApp, or our contact form.",
   },
 ]
 

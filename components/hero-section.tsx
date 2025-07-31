@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Play } from "lucide-react"
+import { ArrowRight, PhoneCall } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 
@@ -13,8 +13,7 @@ export default function HeroSection() {
   }
 
   const handleWatchDemo = () => {
-    // Simulate video modal or redirect to demo
-    alert("Demo video would open here")
+    router.push("/contact")
   }
 
   return (
@@ -58,25 +57,9 @@ export default function HeroSection() {
                 onClick={handleWatchDemo}
                 className="border-white/30 text-white hover:text-white hover:bg-white/10 text-lg px-8 py-6 group bg-transparent"
               >
-                <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                Watch Demo
+                <PhoneCall className="w-5 h-5 mr-2" />
+                Contact Us
               </Button>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-8 mt-12 pt-8 border-t border-white/20">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-1">500+</div>
-                <div className="text-slate-400 text-sm">Premium Cars</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-1">50+</div>
-                <div className="text-slate-400 text-sm">Trusted Dealers</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-1">10K+</div>
-                <div className="text-slate-400 text-sm">Happy Customers</div>
-              </div>
             </div>
           </div>
 

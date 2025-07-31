@@ -15,10 +15,6 @@ export default function CallToAction() {
     window.open(whatsappUrl, "_blank")
   }
 
-  const handleVisitShowroom = () => {
-    window.location.href = "/contact"
-  }
-
   return (
     <section className="py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 relative overflow-hidden">
       {/* Background Animation */}
@@ -67,7 +63,7 @@ export default function CallToAction() {
           </div>
 
           {/* Contact Options */}
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div
               className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 cursor-pointer hover:bg-white/15 transition-colors"
               onClick={handleCallNow}
@@ -84,15 +80,6 @@ export default function CallToAction() {
               <MessageCircle className="w-8 h-8 text-green-400 mx-auto mb-4" />
               <h3 className="text-white font-semibold mb-2">WhatsApp</h3>
               <p className="text-slate-300 text-sm">Quick Support</p>
-            </div>
-
-            <div
-              className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 cursor-pointer hover:bg-white/15 transition-colors"
-              onClick={handleVisitShowroom}
-            >
-              <ArrowRight className="w-8 h-8 text-purple-400 mx-auto mb-4" />
-              <h3 className="text-white font-semibold mb-2">Visit Showroom</h3>
-              <p className="text-slate-300 text-sm">Book Appointment</p>
             </div>
           </div>
         </div>

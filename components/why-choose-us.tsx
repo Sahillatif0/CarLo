@@ -50,7 +50,7 @@ export default function WhyChooseUs() {
     <section className="py-20 bg-gradient-to-br from-slate-50 to-blue-50/30">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl font-bold text-slate-900 mb-4 font-poppins">Why Choose AhmedSeCarLo?</h2>
+          <h2 className="text-4xl font-bold text-slate-900 mb-4 font-poppins">Why Choose Us?</h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
             We're committed to providing you with the best car buying experience through our premium services and
             trusted network
@@ -77,24 +77,21 @@ export default function WhyChooseUs() {
           ))}
         </div>
 
-        {/* Stats Section */}
-        <div className="mt-20 bg-white rounded-3xl p-8 shadow-xl border border-slate-200/50 animate-fade-in animation-delay-600">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold text-blue-600 mb-2">500+</div>
-              <div className="text-slate-600">Premium Cars</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-green-600 mb-2">50+</div>
-              <div className="text-slate-600">Verified Dealers</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-purple-600 mb-2">10K+</div>
-              <div className="text-slate-600">Happy Customers</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-orange-600 mb-2">4.9</div>
-              <div className="text-slate-600">Average Rating</div>
+        {/* Call to Action Card */}
+        <div className="mt-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 shadow-xl text-white animate-fade-in animation-delay-600">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold mb-4">Ready to Find Your Perfect Car?</h3>
+            <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
+              Join thousands of car enthusiasts who trust EliteAuto for their automotive needs. Start your journey
+              today.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button className="bg-white text-blue-600 px-8 py-3 rounded-xl font-semibold hover:bg-blue-50 transition-colors">
+                Browse Cars
+              </button>
+              <button className="border-2 border-white text-white px-8 py-3 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-colors">
+                List Your Car
+              </button>
             </div>
           </div>
         </div>

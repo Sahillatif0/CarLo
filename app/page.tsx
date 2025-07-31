@@ -2,9 +2,9 @@ import HeroSection from "@/components/hero-section"
 import SearchSection from "@/components/search-section"
 import FeaturedCars from "@/components/featured-cars"
 import LatestListings from "@/components/latest-listings"
-import WhyChooseUs from "@/components/why-choose-us"
-import Testimonials from "@/components/testimonials"
 import CallToAction from "@/components/call-to-action"
+import HowItWorks from "@/components/how-it-works"
+import TrustIndicators from "@/components/trust-indicator"
 
 export default function HomePage() {
   return (
@@ -13,8 +13,8 @@ export default function HomePage() {
       <SearchSection />
       <FeaturedCars />
       <LatestListings />
-      <WhyChooseUs />
-      <Testimonials />
+      <HowItWorks />
+      <TrustIndicators/>
       <CallToAction />
     </div>
   )

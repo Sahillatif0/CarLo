@@ -76,7 +76,7 @@ export default function OurMission() {
           ))}
         </div>
 
-        {/* Achievements */}
+        {/* Achievements
         <div className="bg-white rounded-3xl p-8 lg:p-12 shadow-xl border border-slate-200/50 animate-fade-in animation-delay-600">
           <div className="text-center mb-12">
             <h3 className="text-3xl font-bold text-slate-900 mb-4 font-poppins">What Sets Us Apart</h3>
@@ -96,7 +96,7 @@ export default function OurMission() {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   )

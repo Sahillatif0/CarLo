@@ -90,14 +90,6 @@ export default function Footer() {
                 <Mail className="w-4 h-4 mr-3 text-blue-400" />
                 <span className="text-sm">{process.env.NEXT_PUBLIC_EMAIL}</span>
               </div>
-              <div className="flex items-start text-slate-400">
-                <MapPin className="w-4 h-4 mr-3 text-blue-400 mt-0.5" />
-                <span className="text-sm">
-                  123 Main Street
-                  <br />
-                  Karachi, Sindh
-                </span>
-              </div>
             </div>
           </div>
         </div>
