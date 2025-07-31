@@ -13,6 +13,7 @@ import DeleteConfirmModal from "./delete-confirm-modal"
 import { Car as CarType} from "@/types/types"
 import { useRouter } from "next/navigation"
 import UpdateStats from "./update-stats"
+import Loading from "@/app/loading"
 
 export default function AdminDashboard() {
   const [cars, setCars] = useState<CarType[]>([])
@@ -20,6 +21,7 @@ export default function AdminDashboard() {
   const [statusFilter, setStatusFilter] = useState("all")
   const [editingCar, setEditingCar] = useState<CarType | null>(null)
   const [deletingCar, setDeletingCar] = useState<CarType | null>(null)
+  const [isDataUpdated, setIsDataUpdated] = useState(false)
   const router = useRouter()
 
 
@@ -35,6 +37,7 @@ export default function AdminDashboard() {
         console.error("Error fetching cars:", error)
         setCars([]) // Use empty array on error
       }
+      setIsDataUpdated(true);
     }
 
     fetchCars()
@@ -367,11 +370,11 @@ export default function AdminDashboard() {
           {filteredCars.length === 0 && (
             <div className="text-center py-12">
               <Car className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No cars found</h3>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">{isDataUpdated?"No cars found":"Loading Cars for you..."}</h3>
               <p className="mt-1 text-sm text-gray-500">
                 {searchTerm || statusFilter !== "all"
                   ? "Try adjusting your search or filter criteria."
-                  : "Get started by adding a new car listing."}
+                  : isDataUpdated ? "Get started by adding a new car listing." : "Please wait a minute until we get work for you"}
               </p>
             </div>
           )}
