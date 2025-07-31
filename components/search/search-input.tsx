@@ -7,8 +7,8 @@ import SearchFilters from "./search-filters";
 export const SearchInput = ({ filters, setFilters }: { filters: any; setFilters: any }) => {
   const [searchQuery, setSearchQuery] = React.useState("");
 
-  const handleSearch = () => {
-      setFilters((prev: any) => ({ ...prev, query: searchQuery }))
+  const handleSearch = (val: string) => {
+      setFilters((prev: any) => ({ ...prev, query: val }))
   };
 
   return (
@@ -19,14 +19,14 @@ export const SearchInput = ({ filters, setFilters }: { filters: any; setFilters:
           <Input
             placeholder="Search by make, model, or keyword..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {setSearchQuery(e.target.value); handleSearch(e.target.value)}}
             className="pl-10 h-12 border-slate-300 focus:border-blue-500 text-lg"
-            onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+            onKeyPress={(e) => e.key === "Enter" && handleSearch(searchQuery)}
           />
         </div>
 
         <Button
-          onClick={handleSearch}
+          onClick={() => handleSearch(searchQuery)}
           className="h-12 px-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
         >
           <Search className="w-5 h-5 mr-2" />

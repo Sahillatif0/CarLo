@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Bell, Settings, User, LogOut, Shield } from "lucide-react"
+import { Bell, Settings, User, LogOut, Shield, Home } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,6 +33,10 @@ export default function AdminHeader() {
           {/* Right Side */}
           <div className="flex items-center space-x-4">
             {/* Notifications */}
+            <Button variant="ghost" size="sm" className="relative" onClick={() => router.push("/")}>
+              <Home className="h-8 w-8" />
+            </Button>
+            
             <Button variant="ghost" size="sm" className="relative">
               <Bell className="h-5 w-5" />
               <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-500">
