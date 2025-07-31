@@ -5,6 +5,7 @@ export async function GET() {
   try {
     const cars = await prisma.car.findMany({
       where: {
+        sold: false,
         OR: [
           { badge: "featured" },
           { badge: "Featured" },

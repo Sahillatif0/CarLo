@@ -71,3 +71,11 @@ enum FuelType {
   Electric
 }
 
+model Stats {
+  id         Int    @id @default(1) // Always 1, so only one row exists
+  cars       Int
+  customers  Int
+  dealers    Int
+  rating     Float
+  experience Float
+}

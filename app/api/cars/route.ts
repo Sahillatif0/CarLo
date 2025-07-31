@@ -1,9 +1,15 @@
 import { prisma } from "@/lib/prisma";
 
 // GET: Fetch all cars
-export async function GET() {
+export async function GET(req: Request) {
+  const sold = req.url.includes("sold=true");
   try {
-    const cars = await prisma.car.findMany();
+    let cars;
+    if (sold) {
+      cars = await prisma.car.findMany();
+    } else {
+      cars = await prisma.car.findMany({ where: { sold: false } });
+    }
     return Response.json({cars},{status: 200});
     
   } catch (error) {

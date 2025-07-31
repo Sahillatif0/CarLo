@@ -7,11 +7,12 @@ import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, Edit, Trash2, Eye, Filter, Car, Users, TrendingUp, AlertCircle, Plus } from "lucide-react"
+import { Search, Edit, Trash2, Eye, Filter, Car, Users, TrendingUp, AlertCircle, Plus, Pen, PenSquare } from "lucide-react"
 import CarEditModal from "./car-edit-modal"
 import DeleteConfirmModal from "./delete-confirm-modal"
 import { Car as CarType} from "@/types/types"
 import { useRouter } from "next/navigation"
+import UpdateStats from "./update-stats"
 
 export default function AdminDashboard() {
   const [cars, setCars] = useState<CarType[]>([])
@@ -26,7 +27,7 @@ export default function AdminDashboard() {
     // Fetch cars from API or database
     const fetchCars = async () => {
       try {
-        const response = await fetch("/api/cars")
+        const response = await fetch("/api/cars?sold=true")
         if (!response.ok) throw new Error("Failed to fetch cars")
         const data = await response.json()
         setCars(data.cars || []) // Fallback to empty array if API fails
@@ -94,11 +95,9 @@ export default function AdminDashboard() {
   const getStatusBadge = (status: string) => {
     const statusConfig = {
       active: { color: "bg-green-100 text-green-800", label: "Active" },
-      pending: { color: "bg-yellow-100 text-yellow-800", label: "Pending" },
       sold: { color: "bg-blue-100 text-blue-800", label: "Sold" },
-      inactive: { color: "bg-gray-100 text-gray-800", label: "Inactive" },
     }
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.inactive
+    const config = statusConfig[status as keyof typeof statusConfig]
     return <Badge className={`${config.color} border-0`}>{config.label}</Badge>
   }
 
@@ -110,13 +109,14 @@ export default function AdminDashboard() {
       maximumFractionDigits: 0,
     }).format(price)
   }
+  
 
   // Stats calculation
   const stats = {
     total: cars.length,
-    // active: cars.filter((car) => car.status === "active").length,
+    active: cars.filter((car) => !(car.sold)).length,
     // pending: cars.filter((car) => car.status === "pending").length,
-    sold: cars.filter((car) => car.sold === true).length,
+    sold: cars.filter((car) => car.sold).length,
   }
 
   return (
@@ -140,7 +140,7 @@ export default function AdminDashboard() {
             <TrendingUp className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{0}</div>
+            <div className="text-2xl font-bold text-green-600">{stats.active}</div>
             <p className="text-xs text-muted-foreground">Currently live</p>
           </CardContent>
         </Card>
@@ -176,10 +176,13 @@ export default function AdminDashboard() {
               <CardTitle>Car Listings Management</CardTitle>
               <CardDescription>Manage all car listings, edit details, and moderate content</CardDescription>
             </div>
-            <Button className="bg-blue-600 hover:bg-blue-700" onClick={()=>{router.push("/add-car")}}>
+            <div className="flex justify-between md:items-center space-x-2">
+            <Button className="bg-gradient-to-r from-green-600 to-green-800 hover:bg-blue-700" onClick={()=>{router.push("/add-car")}}>
               <Plus className="mr-2 h-4 w-4" />
               Add New Car
             </Button>
+              <UpdateStats />
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -377,6 +380,7 @@ export default function AdminDashboard() {
 
       {/* Modals */}
       {editingCar && <CarEditModal car={editingCar} onClose={() => setEditingCar(null)} onSave={handleUpdateCar} />}
+      
 
       {deletingCar && (
         <DeleteConfirmModal
