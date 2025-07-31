@@ -13,16 +13,47 @@ import { Send, CheckCircle } from "lucide-react"
 export default function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [formData, setFormData] = useState<any>({
+    firstname: "",
+    lastname: "",
+    email: "",
+    phone: "",
+    inquiryType: "",
+    subject: "",
+    msg: ""
+  })
+
+  const handleInputChange = (field: keyof typeof formData, value: any) => {
+      setFormData((prev: any) => ({ ...prev, [field]: value }))
+    }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    for (const key in formData) {
+      const value = formData[key as keyof typeof formData];
+      if (
+        value === undefined ||
+        value === null ||
+        (typeof value === "string" && value.trim() === "")
+      ) {
+        setIsLoading(false)
+        alert(`Please fill in the ${key} field.`)
+        return
+      }
+    }
 
-    setIsLoading(false)
-    setIsSubmitted(true)
+    fetch("/api/message", {
+      method: "POST",
+      body: JSON.stringify({msgDetails: formData})
+    }).then(req => req.json())
+    .then(data => {
+      console.log(data);
+      setIsLoading(false)
+      setIsSubmitted(true)
+    })
+
   }
 
   if (isSubmitted) {
@@ -54,6 +85,8 @@ export default function ContactForm() {
               id="firstName"
               required
               placeholder="Enter your first name"
+              value={formData.firstname}
+              onChange={(e) => handleInputChange("firstname", e.target.value)}
               className="mt-1 border-slate-300 focus:border-blue-500"
             />
           </div>
@@ -65,6 +98,8 @@ export default function ContactForm() {
               id="lastName"
               required
               placeholder="Enter your last name"
+              value={formData.lastname}
+              onChange={(e) => handleInputChange("lastname", e.target.value)}
               className="mt-1 border-slate-300 focus:border-blue-500"
             />
           </div>
@@ -79,6 +114,8 @@ export default function ContactForm() {
             type="email"
             required
             placeholder="Enter your email"
+            value={formData.email}
+            onChange={(e) => handleInputChange("email", e.target.value)}
             className="mt-1 border-slate-300 focus:border-blue-500"
           />
         </div>
@@ -91,13 +128,15 @@ export default function ContactForm() {
             id="phone"
             required
             placeholder="Enter your phone number"
+            value={formData.phone}
+            onChange={(e) => handleInputChange("phone", e.target.value)}
             className="mt-1 border-slate-300 focus:border-blue-500"
           />
         </div>
 
         <div>
           <Label className="text-sm font-medium text-slate-700">Inquiry Type *</Label>
-          <Select required>
+          <Select required value={formData.inquiryType} onValueChange={(value) => handleInputChange("inquiryType", value)}>
             <SelectTrigger className="mt-1 border-slate-300 focus:border-blue-500">
               <SelectValue placeholder="Select inquiry type" />
             </SelectTrigger>
@@ -120,6 +159,8 @@ export default function ContactForm() {
             id="subject"
             required
             placeholder="What is this regarding?"
+            value={formData.subject}
+            onChange={(e) => handleInputChange("subject", e.target.value)}
             className="mt-1 border-slate-300 focus:border-blue-500"
           />
         </div>
@@ -132,6 +173,8 @@ export default function ContactForm() {
             id="message"
             required
             placeholder="Tell us more about your inquiry..."
+            value={formData.msg}
+            onChange={(e) => handleInputChange("msg", e.target.value)}
             rows={5}
             className="mt-1 border-slate-300 focus:border-blue-500"
           />

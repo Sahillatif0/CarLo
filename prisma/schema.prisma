@@ -79,3 +79,16 @@ model Stats {
   rating     Float
   experience Float
 }
+
+model Message {
+  id              String    @id @default(cuid())
+  firstname       String
+  lastname        String
+  email           String
+  phone           String
+  inquiryType     String
+  subject         String
+  msg             String
+  read            Boolean     @default(false)
+  createdAt       DateTime  @default(now())
+}
