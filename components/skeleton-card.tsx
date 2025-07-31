@@ -11,11 +11,11 @@ export function SkeletonCard({width = "280px", height = "150px"}: {width?: strin
     </div>
   )
 }
-export function SkeletonGrid() {
+export function SkeletonGrid({width = "280px", height = "300px", numbers = 9}: {width?: string, height?: string, numbers?: number}) {
   return (
-    <div className="mt-5 space-y-4 flex flex-wrap gap-4 align-center justify-center">
-      {Array.from({ length: 9 }).map((_, index) => (
-        <SkeletonCard key={index} />
+     <div className="mt-5 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {Array.from({ length: numbers }).map((_, index) => (
+        <SkeletonCard key={index} width={width} height={height} />
       ))}
     </div>
   )

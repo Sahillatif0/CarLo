@@ -6,49 +6,12 @@ import { Button } from "@/components/ui/button"
 import { MapPin, Calendar, Gauge, Heart, Star, Eye } from "lucide-react"
 import { useEffect, useState } from "react"
 import { formatPrice } from "@/lib/common-functions"
-
-const featuredCarss = [
-  {
-    id: 1,
-    title: "BMW 3 Series 2023",
-    price: "PKR 85,00,000",
-    originalPrice: "PKR 90,00,000",
-    location: "Karachi, Sindh",
-    year: "2023",
-    mileage: "15,000 km",
-    rating: 4.8,
-    images: ["/car.png?height=250&width=400"],
-    badge: "Featured",
-    badgeColor: "bg-gradient-to-r from-yellow-400 to-orange-500",
-  },
-  {
-    id: 2,
-    title: "Mercedes C-Class 2022",
-    price: "PKR 95,00,000",
-    location: "Lahore, Punjab",
-    year: "2022",
-    mileage: "25,000 km",
-    rating: 4.9,
-    images: ["/car.png?height=250&width=400"],
-    badge: "Premium",
-    badgeColor: "bg-gradient-to-r from-purple-500 to-pink-500",
-  },
-  {
-    id: 3,
-    title: "Audi A4 2023",
-    price: "PKR 78,00,000",
-    location: "Islamabad, ICT",
-    year: "2023",
-    mileage: "12,000 km",
-    rating: 4.7,
-    images: ["/car.png?height=250&width=400"],
-    badge: "New",
-    badgeColor: "bg-gradient-to-r from-green-500 to-emerald-500",
-  },
-]
+import { SkeletonGrid } from "./skeleton-card"
 
 export default function FeaturedCars() {
-  const [featuredCars, setFeaturedCars] = useState<any>(featuredCarss)
+  const [featuredCars, setFeaturedCars] = useState<any>()
+  const [isDataUpdated, setIsDataUpdated] = useState(false)
+
   const fetchCars = () =>{
     fetch("/api/cars/featured")
     .then(res => res.json())
@@ -58,12 +21,20 @@ export default function FeaturedCars() {
         setFeaturedCars(data.cars)
       else
         console.log("Error fetching cars")
+      setIsDataUpdated(true)
     })
   }
 
   useEffect(()=>{
     fetchCars()
   },[])
+
+  if (isDataUpdated && featuredCars?.length === 0) {
+    return (
+      <></>
+    )
+  }
+
   return (
     <section className="py-20 bg-gradient-to-br from-slate-50 to-blue-50/30">
       <div className="max-w-7xl mx-auto px-4">
@@ -74,7 +45,12 @@ export default function FeaturedCars() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {(!isDataUpdated)? (
+          <div className="max-w-7xl block mx-auto px-4">
+            <SkeletonGrid numbers={3} />
+          </div>
+        ) : 
+        (<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {featuredCars.map((car:any, index:number) => (
             <div
               key={car.id}
@@ -161,7 +137,7 @@ export default function FeaturedCars() {
             </div>
           ))}
         </div>
-
+        )}
         <div className="text-center mt-12 animate-fade-in animation-delay-600">
           <Button
             size="lg"

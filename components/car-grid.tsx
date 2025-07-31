@@ -5,9 +5,10 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { MapPin, Calendar, Gauge, Heart, Star, Eye, Phone, MessageCircle } from "lucide-react"
 import { useState, useEffect } from "react"
-import { SkeletonGrid } from "./skeleton-card"
+import { SkeletonCard, SkeletonGrid } from "./skeleton-card"
 import { formatPrice } from "@/lib/common-functions"
 import { Car } from "@/types/types"
+import { Skeleton } from "./ui/skeleton"
 
 interface CarGridProps {
   viewMode?: "grid" | "list"
@@ -133,7 +134,7 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
 
   if (!isDataUpdated) {
     return (
-      <SkeletonGrid />
+      <SkeletonGrid numbers={9} />
     )
   }
   if (viewMode === "list") {

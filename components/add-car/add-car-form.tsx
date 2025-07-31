@@ -108,6 +108,19 @@ export default function AddCarForm() {
     e.preventDefault()
     setIsLoading(true)
 
+    for (const key in carDetails) {
+      const value = carDetails[key as keyof typeof carDetails];
+      if (
+        value === undefined ||
+        value === null ||
+        (typeof value === "string" && value.trim() === "")
+      ) {
+        setIsLoading(false)
+        alert(`Please fill in the ${key} field.`)
+        return
+      }
+    }
+
     // Simulate form submission
     await new Promise((resolve) => setTimeout(resolve, 3000))
     fetch("/api/cars", {

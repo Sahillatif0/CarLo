@@ -7,71 +7,24 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { MapPin, Calendar, Gauge, ChevronLeft, ChevronRight, Eye } from "lucide-react"
 import { formatPrice } from "@/lib/common-functions"
+import { SkeletonGrid } from "./skeleton-card"
 
-const latestCarss = [
-  {
-    id: 4,
-    title: "Toyota Camry Hybrid 2023",
-    price: "PKR 65,00,000",
-    location: "Karachi, Sindh",
-    year: "2023",
-    mileage: "8,000 km",
-    images: ["/car.png?height=200&width=300"],
-    isNew: true,
-  },
-  {
-    id: 5,
-    title: "Honda Accord 2022",
-    price: "PKR 58,00,000",
-    location: "Lahore, Punjab",
-    year: "2022",
-    mileage: "18,000 km",
-    images: ["/car.png?height=200&width=300"],
-    isNew: false,
-  },
-  {
-    id: 6,
-    title: "Lexus ES 300h 2023",
-    price: "PKR 1,20,00,000",
-    location: "Islamabad, ICT",
-    year: "2023",
-    mileage: "5,000 km",
-    images: ["/car.png?height=200&width=300"],
-    isNew: true,
-  },
-  {
-    id: 7,
-    title: "Infiniti Q50 2022",
-    price: "PKR 75,00,000",
-    location: "Rawalpindi, Punjab",
-    year: "2022",
-    mileage: "22,000 km",
-    images: ["/car.png?height=200&width=300"],
-    isNew: false,
-  },
-  {
-    id: 8,
-    title: "Genesis G90 2023",
-    price: "PKR 1,50,00,000",
-    location: "Karachi, Sindh",
-    year: "2023",
-    mileage: "3,000 km",
-    images: ["/car.png?height=200&width=300"],
-    isNew: true,
-  },
-]
 
 export default function LatestListings() {
-  const [latestCars, setlatestCars] = useState<any>(latestCarss)
+  const [latestCars, setlatestCars] = useState<any>([])
+  const [isDataUpdated, setIsDataUpdated] = useState(false)
+
     const fetchCars = () =>{
       fetch("/api/cars/latest")
       .then(res => res.json())
       .then(data => {
         console.log("cars: ", data)
-        if(data.cars)
+        if(data.cars) {
           setlatestCars(data.cars)
+        }
         else
           console.log("Error fetching cars")
+        setIsDataUpdated(true)
       })
     }
   
@@ -114,6 +67,12 @@ export default function LatestListings() {
   // Use itemsPerViewState instead of itemsPerView in the rest of the component
   const itemsPerView = itemsPerViewState
 
+  if (isDataUpdated && latestCars.length === 0) {
+    return (
+      <></>
+    )
+  }
+
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4">
@@ -142,8 +101,12 @@ export default function LatestListings() {
             </Button>
           </div>
         </div>
-
-        <div className="relative overflow-hidden">
+        {(!isDataUpdated)? (
+          <div className="max-w-7xl block mx-auto px-4">
+            <SkeletonGrid numbers={3} />
+          </div>
+        ) : (
+          <div className="relative overflow-hidden">
             <div
             className="flex transition-transform duration-500 ease-in-out"
             style={{
@@ -153,12 +116,13 @@ export default function LatestListings() {
                 : currentIndex * (100 / itemsPerView)
               }%)`,
             }}
-            >
-            {latestCars.map((car: any, index: number) => (
-              <div key={car.id} className="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-4">
-              <div
-                className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-200/50 animate-slide-up"
-                style={{ animationDelay: `${index * 100}ms` }}
+            >               
+               {
+                latestCars.map((car: any, index: number) => (
+                  <div key={car.id} className="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-4">
+                    <div
+                      className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-200/50 animate-slide-up"
+                      style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="relative w-full h-64 overflow-hidden">
                   <Image
@@ -220,6 +184,7 @@ export default function LatestListings() {
             ))}
             </div>
         </div>
+        )}
 
         <div className="text-center mt-12 animate-fade-in animation-delay-400">
           <Button

@@ -18,7 +18,6 @@ import { OurFileRouter } from "@/app/api/uploadthing/core"
 import { Separator } from "@/components/ui/separator"
 import {
   X,
-  Upload,
   Save,
   Car,
   User,
@@ -175,6 +174,20 @@ export default function CarEditModal({ car, onClose, onSave }: { car: CarType; o
   const handleSubmit = async (e: any) => {
     e.preventDefault()
     setIsLoading(true)
+
+    for (const key in formData) {
+      const value = formData[key as keyof typeof formData];
+      if (
+        value === undefined ||
+        value === null ||
+        (typeof value === "string" && value.trim() === "") ||
+        images.length === 0
+      ) {
+        setIsLoading(false)
+        alert(`Please fill in the ${key} field.`)
+        return
+      }
+    }
 
     fetch("/api/seller/" + car.sellerId, {
       method: "PUT",
