@@ -127,13 +127,13 @@ export default function FilterPanel({filters, setFilters}:{filters:any, setFilte
           </div>
           <div className="flex items-center space-x-2 text-sm">
             <Input
-              value={`PKR ${(filters.priceRange[0] / 100000).toFixed(0)}L`}
+              value={`PKR ${(filters.priceRange[0] / 100000).toFixed(0)}Lac`}
               readOnly
               className="text-center border-slate-300"
             />
             <span className="text-slate-400">-</span>
             <Input
-              value={`PKR ${(filters.priceRange[1] / 100000).toFixed(0)}L`}
+              value={`PKR ${(filters.priceRange[1] / 100000).toFixed(0)}Lac`}
               readOnly
               className="text-center border-slate-300"
             />

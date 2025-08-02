@@ -6,7 +6,7 @@ const contactMethods = [
   {
     icon: Phone,
     title: "Phone",
-    details: ["+92 302 3136195", "+92 304 8105667"],
+    details: ["+92 302 3136195"],
     action: "Call Now",
     color: "text-green-600",
     bgColor: "bg-green-100",
