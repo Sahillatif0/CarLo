@@ -93,7 +93,7 @@ export default function CarDetailPage({ params }: { params: { id: string } }) {
             </div>
           </div>
           <div className="lg:col-span-1 animate-slide-up animation-delay-400">
-            <ContactSection sellerDetails={seller} />
+            <ContactSection />
           </div>
         </div>
         <div className="animate-fade-in animation-delay-600">
