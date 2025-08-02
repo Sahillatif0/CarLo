@@ -250,7 +250,7 @@ export default function Navbar() {
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full justify-start bg-transparent border-slate-300 hover:border-blue-600 hover:text-blue-600 h-12"
+                className="w-full bg-transparent border-slate-300 hover:border-blue-600 hover:text-blue-600 h-12"
                 onClick={() => {
                   handleContactClick()
                   closeMobileMenu()
