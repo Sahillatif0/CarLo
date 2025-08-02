@@ -263,10 +263,10 @@ export default function Navbar() {
               <Button
                 size="lg"
                 className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 h-12"
-                onClick={() => {
-                  router.push("/cars");
-                  closeMobileMenu();
-                }}
+                // onClick={() => {
+                //   router.push("/cars");
+                //   closeMobileMenu();
+                // }}
               >
                 <Search className="w-4 h-4 mr-3" />
                 Browse Cars
