@@ -84,29 +84,41 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
           }
         }
 
-        // Query filter (search in title)
-        for(const key in car) {
-          let value = car[key as keyof Car]
-          if (filters.query && value != null) {
-            const valueStr = typeof value === "string" ? value : String(value)
-            if (!valueStr.toLowerCase().includes(filters.query.toLowerCase())) {
-              matches = true
-              break
+        // Query filter (search in any car field)
+        if (filters.query) {
+          let found = false
+          for(const key in car) {
+            let value = car[key as keyof Car]
+            if (value != null) {
+              const valueStr = typeof value === "string" ? value : String(value)
+              if (valueStr.toLowerCase().includes(filters.query.toLowerCase())) {
+                found = true
+                break
+              }
             }
+          }
+          if (!found) {
+            matches = false
           }
         }
 
-        if (filters.query && !car.title?.toLowerCase().includes(filters.query.toLowerCase())) {
-          matches = false
-        }
-
         // Body type filter (if available)
-        if (filters.bodyType && car.bodyType && car.bodyType !== filters.bodyType) {
+        if (filters.bodyType && car.bodyType && !filters.bodyType.includes(car.bodyType)) {
           matches = false
         }
 
         // Fuel type filter (if available)
-        if (filters.fuelType && car.fuelType && car.fuelType !== filters.fuelType) {
+        if (filters.fuelType && car.fuelType && !filters.fuelType.includes(car.fuelType)) {
+          matches = false
+        }
+
+        // Featured filter
+        if (filters.featured && !car.featured && car.badge !== "Featured") {
+          matches = false
+        }
+
+        // Type filter (if available)
+        if (filters.type && car.badge && !car.badge.toLowerCase().includes(filters.type.toLowerCase())) {
           matches = false
         }
 
@@ -139,8 +151,7 @@ export default function CarGrid({ viewMode = "grid", sortBy = "latest", filters 
 
   useEffect(() => {
     filterCars()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, sortBy])
+  }, [filters, sortBy, unfilteredCars])
 
   if (!isDataUpdated) {
     return (

@@ -21,6 +21,8 @@ function SearchContent() {
     bodyType: searchParams.get("bodyType") || "",
     fuelType: searchParams.get("fuelType") || "",
     query: searchParams.get("q") || "",
+    featured: searchParams.get("featured") === "true",
+    type: searchParams.get("type") || "",
   })
 
   const [sortBy, setSortBy] = useState("latest")
